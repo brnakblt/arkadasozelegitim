@@ -22,9 +22,9 @@ const Process: React.FC = () => {
     },
     {
       number: '04',
-      title: 'Düzenli Takip ve Değerlendirme',
-      description: 'Çocuğunuzun gelişimini düzenli olarak takip eder, programı güncelleriz.',
-      icon: '📊'
+      title: 'Sürekli Destek',
+      description: 'Eğitim süreci boyunca ve sonrasında sürekli destek ve danışmanlık hizmeti veriyoruz.',
+      icon: '🤝'
     },
     {
       number: '05',
@@ -34,9 +34,9 @@ const Process: React.FC = () => {
     },
     {
       number: '06',
-      title: 'Sürekli Destek',
-      description: 'Eğitim süreci boyunca ve sonrasında sürekli destek ve danışmanlık hizmeti veriyoruz.',
-      icon: '🤝'
+      title: 'Düzenli Takip ve Değerlendirme',
+      description: 'Çocuğunuzun gelişimini düzenli olarak takip eder, programı güncelleriz.',
+      icon: '📊'
     }
   ];
 
@@ -85,9 +85,20 @@ const Process: React.FC = () => {
 
               {/* Connecting Line (for larger screens) */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary to-secondary transform -translate-y-1/2">
-                  <div className="absolute right-0 top-1/2 w-2 h-2 bg-secondary rounded-full transform -translate-y-1/2"></div>
-                </div>
+                <>
+                  {/* Default horizontal connector for items not 03 */}
+                  {index !== 2 && (
+                    <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary to-secondary transform -translate-y-1/2">
+                      <div className="absolute right-0 top-1/2 w-2 h-2 bg-secondary rounded-full transform -translate-y-1/2"></div>
+                    </div>
+                  )}
+                  {/* Special vertical connector for item 03 */}
+                  {index === 2 && (
+                    <div className="hidden lg:block absolute left-1/2 -bottom-4 w-0.5 h-8 bg-gradient-to-b from-primary to-secondary transform -translate-x-1/2">
+                      <div className="absolute left-1/2 -bottom-2 w-2 h-2 bg-secondary rounded-full transform -translate-x-1/2"></div>
+                    </div>
+                  )}
+                </>
               )}
 
               {/* Hover Effect */}

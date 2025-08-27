@@ -3,23 +3,7 @@ import React, { useState, useEffect } from 'react';
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
+  const [activeSection, setActiveSection] = useState('home');
 
   const menuItems = [
     { id: 'home', label: 'Ana Sayfa' },
@@ -30,35 +14,81 @@ const Header: React.FC = () => {
     { id: 'contact', label: 'İletişim' }
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      let currentSection = '';
+
+      for (const item of menuItems) {
+        const element = document.getElementById(item.id);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            currentSection = item.id;
+            break;
+          }
+        }
+      }
+
+      if (currentSection) {
+        setActiveSection(currentSection);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Set initial active section
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [menuItems]);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMobileMenuOpen(false);
+  };
+  
   return (
     <header 
-      className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg transition-all duration-300"
+      className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${isScrolled ? 'shadow-lg' : ''}`}
       role="banner"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="flex items-center">
+              <img className="h-16 w-auto" src="/fotolar/logo.png" alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi" />
+              <span className="ml-3 font-display text-xl font-bold text-neutral-dark">Arkadaş</span>
+            </a>
+          </div>
+
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8" role="navigation" aria-label="Ana menü">
+          <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Ana menü">
             {menuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="font-body text-sm font-medium text-neutral-dark hover:text-primary transition-colors duration-200"
+                className="relative font-body text-sm font-medium text-neutral-dark hover:text-primary transition-colors duration-200 group"
               >
                 {item.label}
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform transition-transform duration-300 ease-out ${ 
+                    activeSection === item.id ? 'scale-x-100' : 'scale-x-0' 
+                  }`}
+                ></span>
               </button>
             ))}
-          </nav>
-
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <button
+             <button
               onClick={() => scrollToSection('contact')}
-              className="bg-primary text-white px-6 py-2 rounded-full font-body font-medium hover:bg-primary/90 transition-colors duration-200"
+              className="ml-8 bg-primary text-white px-6 py-2 rounded-full font-body font-medium hover:bg-primary/90 transition-colors duration-200"
             >
               Randevu Al
             </button>
-          </div>
+          </nav>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -85,11 +115,19 @@ const Header: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="block w-full text-left px-3 py-2 font-body text-base font-medium text-neutral-dark hover:text-primary transition-colors duration-200"
+                  className={`block w-full text-left px-3 py-2 font-body text-base font-medium transition-colors duration-200 ${activeSection === item.id ? 'text-primary' : 'text-neutral-dark'}`}
                 >
                   {item.label}
                 </button>
               ))}
+              <div className="border-t border-gray-100 pt-4 mt-4">
+                <button
+                  onClick={() => scrollToSection('contact')}
+                  className="w-full bg-primary text-white px-6 py-3 rounded-lg font-body font-medium hover:bg-primary/90 transition-colors duration-200"
+                >
+                  Randevu Al
+                </button>
+              </div>
             </div>
           </div>
         )}

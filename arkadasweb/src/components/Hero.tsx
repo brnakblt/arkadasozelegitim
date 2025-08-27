@@ -12,7 +12,7 @@ const Hero: React.FC = () => {
           style={{ width: '100%', height: '100%' }}
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/20"></div>
       </div>
 
       {/* Curved Overlay */}
@@ -20,7 +20,7 @@ const Hero: React.FC = () => {
         <div className="relative w-full h-full">
           <svg
             className="absolute inset-0 w-full h-full"
-            viewBox="0 0 400 800"
+            viewBox="-150 0 400 800"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
               </button>
               <button
                 onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
-                className="border-2 border-white text-white px-8 py-4 rounded-full font-body font-semibold hover:bg-white hover:text-primary transition-all duration-300"
+                className="bg-white text-primary px-8 py-4 rounded-full font-body font-semibold hover:bg-gray-200 transition-all duration-300"
               >
                 Daha Fazla Bilgi
               </button>
@@ -70,21 +70,21 @@ const Hero: React.FC = () => {
           {/* Stats */}
           <div className="hidden lg:block">
             <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+              <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-display font-bold text-secondary mb-2">500+</div>
-                <div className="font-body text-white/80">Başarılı Öğrenci</div>
+                <div className="font-body text-neutral-dark/80">Başarılı Öğrenci</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+              <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-display font-bold text-secondary mb-2">15+</div>
-                <div className="font-body text-white/80">Yıl Deneyim</div>
+                <div className="font-body text-neutral-dark/80">Yıl Deneyim</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+              <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-display font-bold text-secondary mb-2">98%</div>
-                <div className="font-body text-white/80">Aile Memnuniyeti</div>
+                <div className="font-body text-neutral-dark/80">Aile Memnuniyeti</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+              <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-display font-bold text-secondary mb-2">24/7</div>
-                <div className="font-body text-white/80">Destek Hattı</div>
+                <div className="font-body text-neutral-dark/80">Destek Hattı</div>
               </div>
             </div>
           </div>
