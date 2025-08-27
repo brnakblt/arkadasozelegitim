@@ -1,5 +1,4 @@
 import React from 'react';
-import Logo from './Logo';
 
 const Footer: React.FC = () => {
   const scrollToSection = (sectionId: string) => {
@@ -26,9 +25,8 @@ const Footer: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Main Footer Content */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {/* Brand Section */}
+            {/* Newsletter Section */}
             <div className="lg:col-span-2">
-              <Logo size="lg" className="mb-4" />
               <p className="font-body text-white/80 mb-6 leading-relaxed max-w-md">
                 2009 yılından bu yana özel eğitim alanında hizmet veren merkezimiz, 
                 özel gereksinimli çocukların eğitim ve rehabilitasyon süreçlerinde 
@@ -142,7 +140,7 @@ const Footer: React.FC = () => {
           <div className="border-t border-white/20 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="font-body text-white/60 text-sm">
-                © 2024 Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi. Tüm hakları saklıdır.
+                © 2024 Tüm hakları saklıdır.
               </div>
               
               <div className="flex flex-wrap gap-6">
