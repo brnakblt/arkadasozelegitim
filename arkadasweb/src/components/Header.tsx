@@ -61,7 +61,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="flex items-center">
-              <img className="h-16 w-auto" src="/fotolar/logo.png" alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi" />
+              <img className="h-16 w-auto" src="/fotolar/logo.svg" alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi" />
               <span className="ml-3 font-display text-xl font-bold text-neutral-dark">Arkadaş</span>
             </a>
           </div>
