@@ -37,6 +37,7 @@ const Contact: React.FC = () => {
         className="absolute inset-0 w-full h-full opacity-10"
         viewBox="0 0 1000 1000"
         fill="none"
+        preserveAspectRatio="none"
       >
         <path
           d="M0 250C200 100 400 700 600 400C800 100 1000 700 1000 400V1000H0V250Z"
