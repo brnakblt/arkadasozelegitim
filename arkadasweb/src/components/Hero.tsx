@@ -6,7 +6,7 @@ const Hero: React.FC = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/fotolar/1.jpg"
+          src="/images/1.jpg"
           alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi - Özel eğitim sınıfı, çocuklar öğreniyor, destekleyici eğitim ortamı"
           className="w-full h-full object-cover"
           style={{ width: '100%', height: '100%' }}

@@ -5,31 +5,31 @@ const Gallery: React.FC = () => {
 
   const images = [
     {
-      src: "/fotolar/1.jpg",
+      src: "/images/1.jpg",
       alt: "Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi - Bireysel terapi seansları, uzman eğitmenler ile özel eğitim",
       title: "Bireysel Terapi Seansları",
       category: "Terapi"
     },
     {
-      src: "/fotolar/2.jpg",
+      src: "/images/2.jpg",
       alt: "Arkadaş Özel Eğitim Merkezi - Modern özel eğitim sınıfları, çocuklar öğreniyor, destekleyici eğitim ortamı",
       title: "Özel Eğitim Sınıfları",
       category: "Eğitim"
     },
     {
-      src: "/fotolar/3.jpg",
+      src: "/images/3.jpg",
       alt: "Arkadaş Rehabilitasyon Merkezi - Eğitici aktiviteler, renkli öğrenme materyalleri, interaktif öğrenme",
       title: "Eğitici Aktiviteler",
       category: "Aktivite"
     },
     {
-      src: "/fotolar/4.jpg",
+      src: "/images/4.jpg",
       alt: "Arkadaş Özel Eğitim - Profesyonel rehabilitasyon seansları, terapist çocukla çalışıyor, modern terapi odası",
       title: "Rehabilitasyon Seansları",
       category: "Rehabilitasyon"
     },
     {
-      src: "/fotolar/5.jpg",
+      src: "/images/5.jpg",
       alt: "Arkadaş Özel Eğitim Merkezi - Grup çalışmaları, sosyal beceri geliştirme, çocuklar birlikte öğreniyor",
       title: "Grup Çalışmaları",
       category: "Sosyal"
@@ -112,7 +112,7 @@ const Gallery: React.FC = () => {
               </div>
 
               {/* Category Badge */}
-              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center justify-center">
                 <span className="text-xs font-body font-medium text-neutral-dark">{image.category}</span>
               </div>
             </div>

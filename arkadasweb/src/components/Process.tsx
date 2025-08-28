@@ -69,61 +69,310 @@ const Process: React.FC = () => {
         </div>
 
         {/* Process Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {steps.map((step, index) => (
-            <div
-              key={index}
-              className={`group relative bg-white rounded-3xl p-8 card-shadow hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${ 
-                index === 0 || index === 1 || index === 2 ? 'mb-16' : '' 
-              }`}
-            >
-              {/* Step Number */}
-              <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                <span className="font-display font-bold text-white text-lg">
-                  {step.number}
-                </span>
+        <div className="relative">
+          {/* Sharp S-shaped path with prominent arrows */}
+          <div className="hidden lg:block absolute inset-0 pointer-events-none z-0">
+            <svg className="w-full h-full" viewBox="0 0 1200 600" fill="none">
+              {/* Connection lines (subtle) */}
+              <line
+                x1="200"
+                y1="150"
+                x2="600"
+                y2="150"
+                stroke="#7CB342"
+                strokeWidth="2"
+                strokeDasharray="4,2"
+                opacity="0.4"
+              />
+              <line
+                x1="600"
+                y1="150"
+                x2="1000"
+                y2="150"
+                stroke="#7CB342"
+                strokeWidth="2"
+                strokeDasharray="4,2"
+                opacity="0.4"
+              />
+              <line
+                x1="1000"
+                y1="150"
+                x2="1000"
+                y2="300"
+                stroke="#A5D6A7"
+                strokeWidth="2"
+                strokeDasharray="4,2"
+                opacity="0.4"
+              />
+              <line
+                x1="1000"
+                y1="300"
+                x2="200"
+                y2="300"
+                stroke="#A5D6A7"
+                strokeWidth="2"
+                strokeDasharray="4,2"
+                opacity="0.4"
+              />
+              <line
+                x1="200"
+                y1="300"
+                x2="200"
+                y2="450"
+                stroke="#F4A261"
+                strokeWidth="2"
+                strokeDasharray="4,2"
+                opacity="0.4"
+              />
+              <line
+                x1="200"
+                y1="450"
+                x2="600"
+                y2="450"
+                stroke="#F4A261"
+                strokeWidth="2"
+                strokeDasharray="4,2"
+                opacity="0.4"
+              />
+              <line
+                x1="600"
+                y1="450"
+                x2="1000"
+                y2="450"
+                stroke="#F4A261"
+                strokeWidth="2"
+                strokeDasharray="4,2"
+                opacity="0.4"
+              />
+
+              {/* Connection dots */}
+              <circle
+                cx="200"
+                cy="150"
+                r="4"
+                fill="#7CB342"
+                className="animate-pulse"
+              />
+              <circle
+                cx="600"
+                cy="150"
+                r="4"
+                fill="#7CB342"
+                className="animate-pulse"
+                style={{ animationDelay: "0.5s" }}
+              />
+              <circle
+                cx="1000"
+                cy="150"
+                r="4"
+                fill="#7CB342"
+                className="animate-pulse"
+                style={{ animationDelay: "1s" }}
+              />
+              <circle
+                cx="200"
+                cy="450"
+                r="4"
+                fill="#F4A261"
+                className="animate-pulse"
+                style={{ animationDelay: "1.5s" }}
+              />
+              <circle
+                cx="600"
+                cy="450"
+                r="4"
+                fill="#F4A261"
+                className="animate-pulse"
+                style={{ animationDelay: "2s" }}
+              />
+              <circle
+                cx="1000"
+                cy="450"
+                r="4"
+                fill="#F4A261"
+                className="animate-pulse"
+                style={{ animationDelay: "2.5s" }}
+              />
+              <circle cx="1000" cy="300" r="3" fill="#A5D6A7" />
+              <circle cx="200" cy="300" r="3" fill="#A5D6A7" />
+            </svg>
+          </div>
+
+          {/* Large Arrow Icons between boxes */}
+          <div className="hidden lg:block absolute inset-0 pointer-events-none z-10">
+            {/* Arrow 01 -> 02 */}
+            <div className="absolute" style={{ left: "400px", top: "120px" }}>
+              <div
+                className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg animate-bounce"
+                style={{ animationDelay: "0.5s" }}
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
-
-              {/* Icon */}
-              <div className="text-4xl mb-6 mt-4">{step.icon}</div>
-
-              {/* Content */}
-              <h3 className="font-display text-xl font-bold text-neutral-dark mb-4 group-hover:text-primary transition-colors duration-300">
-                {step.title}
-              </h3>
-
-              <p className="font-body text-neutral-dark/80 leading-relaxed">
-                {step.description}
-              </p>
-
-              {/* Connecting Line (for larger screens) */}
-              {index < steps.length - 1 && (
-                <>
-                  {/* Horizontal connector for items 01 and 02 */}
-                  {(index === 0 || index === 1) && (
-                    <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary to-secondary transform -translate-y-1/2">
-                      <div className="absolute right-0 top-1/2 w-2 h-2 bg-secondary rounded-full transform -translate-y-1/2"></div>
-                    </div>
-                  )}
-                  {/* Special vertical connector for item 03 */}
-                  {index === 2 && (
-                    <div className="hidden lg:block absolute left-1/2 -bottom-4 w-0.5 h-8 bg-gradient-to-b from-primary to-secondary transform -translate-x-1/2">
-                      <div className="absolute left-1/2 -bottom-2 w-2 h-2 bg-secondary rounded-full transform -translate-x-1/2"></div>
-                    </div>
-                  )}
-                  {/* Reversed horizontal connector for items 04 and 05 */}
-                  {(index === 3 || index === 4) && (
-                    <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-l from-primary to-secondary transform -translate-y-1/2">
-                      <div className="absolute left-0 top-1/2 w-2 h-2 bg-secondary rounded-full transform -translate-y-1/2"></div>
-                    </div>
-                  )}
-                </>
-              )}
-
-              {/* Hover Effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
-          ))}
+
+            {/* Arrow 02 -> 03 */}
+            <div className="absolute" style={{ left: "800px", top: "120px" }}>
+              <div
+                className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg animate-bounce"
+                style={{ animationDelay: "1s" }}
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Arrow 03 down */}
+            <div className="absolute" style={{ left: "970px", top: "220px" }}>
+              <div
+                className="w-12 h-12 bg-accent rounded-full flex items-center justify-center shadow-lg animate-bounce"
+                style={{ animationDelay: "1.5s" }}
+              >
+                <svg
+                  className="w-6 h-6 text-white transform rotate-90"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Arrow middle horizontal (left) */}
+            <div className="absolute" style={{ left: "600px", top: "270px" }}>
+              <div
+                className="w-12 h-12 bg-accent rounded-full flex items-center justify-center shadow-lg animate-bounce"
+                style={{ animationDelay: "2s" }}
+              >
+                <svg
+                  className="w-6 h-6 text-white transform rotate-180"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Arrow down to 04 */}
+            <div className="absolute" style={{ left: "170px", top: "370px" }}>
+              <div
+                className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center shadow-lg animate-bounce"
+                style={{ animationDelay: "2.5s" }}
+              >
+                <svg
+                  className="w-6 h-6 text-white transform rotate-90"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Arrow 04 -> 05 */}
+            <div className="absolute" style={{ left: "400px", top: "420px" }}>
+              <div
+                className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center shadow-lg animate-bounce"
+                style={{ animationDelay: "3s" }}
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Arrow 05 -> 06 */}
+            <div className="absolute" style={{ left: "800px", top: "420px" }}>
+              <div
+                className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center shadow-lg animate-bounce"
+                style={{ animationDelay: "3.5s" }}
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-x-16 lg:gap-y-20 relative z-10">
+            {steps.map((step, index) => (
+              <div
+                key={index}
+                className="group relative bg-white rounded-3xl p-8 card-shadow hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+              >
+                {/* Step Number - Centered at top */}
+                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-xl border-4 border-white z-20">
+                  <span className="font-display font-bold text-white text-xl">
+                    {step.number}
+                  </span>
+                </div>
+
+                {/* Icon */}
+                <div className="text-5xl mb-6 mt-10 text-center filter drop-shadow-lg">
+                  {step.icon}
+                </div>
+
+                {/* Content */}
+                <h3 className="font-display text-xl font-bold text-neutral-dark mb-4 group-hover:text-primary transition-colors duration-300 text-center">
+                  {step.title}
+                </h3>
+
+                <p className="font-body text-neutral-dark/80 leading-relaxed text-center">
+                  {step.description}
+                </p>
+
+                {/* Hover Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-accent/5 to-secondary/8 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bottom CTA */}

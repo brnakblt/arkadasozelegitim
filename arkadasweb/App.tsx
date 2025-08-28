@@ -18,7 +18,7 @@ const App: React.FC = () => {
       </a>
       
       <Header />
-      <main id="main-content" role="main">
+      <main id="main-content" role="main" className="pt-16">
         <Hero />
         <About />
         <Services />
