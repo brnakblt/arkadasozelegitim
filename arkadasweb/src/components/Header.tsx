@@ -77,9 +77,12 @@ const Header: React.FC = () => {
             src="/images/logo.svg"
             alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi"
           />
-          <span className="ml-3 font-display text-xl font-bold text-neutral-dark">
-            Arkadaş
-          </span>
+
+          <img
+            className="h-16 w-auto"
+            src="/images/logo_isim.svg"
+            alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi"
+          />
         </a>
       </div>
 
