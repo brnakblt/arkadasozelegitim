@@ -4,9 +4,9 @@ const Process: React.FC = () => {
   const steps = [
     {
       number: "01",
-      title: "İlk Görüşme ve Değerlendirme",
+      title: "İlk Görüşme",
       description:
-        "Çocuğunuzla tanışır, aile görüşmesi yapar ve kapsamlı bir değerlendirme süreci başlatırız.",
+        "Çocuğunuzla tanışır ve ailenizle detaylı bir görüşme gerçekleştiririz.",
       icon: "👥",
     },
     {
@@ -229,6 +229,28 @@ const Process: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-accent/5 to-secondary/8 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             ))}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="text-center mt-20">
+            <h3 className="font-display text-2xl md:text-3xl font-bold text-neutral-dark mb-4">
+              Çocuğunuzun Gelişimi İçin
+              <span className="text-gradient block">Hemen Başlayın</span>
+            </h3>
+            <p className="font-body text-lg text-neutral-dark/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+              Uzman ekibimizle tanışın ve çocuğunuzun bireysel ihtiyaçlarına
+              uygun eğitim programını birlikte belirleyelim.
+            </p>
+            <button
+              onClick={() =>
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="bg-primary text-white px-8 py-4 rounded-full font-body font-semibold hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              Randevu Alın
+            </button>
           </div>
         </div>
       </div>

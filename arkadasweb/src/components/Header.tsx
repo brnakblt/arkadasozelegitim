@@ -8,6 +8,7 @@ const Header: React.FC = () => {
   const menuItems = [
     { id: "home", label: "Ana Sayfa" },
     { id: "about", label: "Hakkımızda" },
+    { id: "team", label: "Ekibimiz" },
     { id: "services", label: "Hizmetlerimiz" },
     { id: "process", label: "Sürecimiz" },
     { id: "gallery", label: "Galeri" },
@@ -81,9 +82,6 @@ const Header: React.FC = () => {
             <h1 className="font-display text-lg lg:text-2xl font-semibold text-primary leading-tight">
               Arkadaş
             </h1>
-            <p className="font-display text-sm lg:text-base font-semibold text-secondary leading-tight lg:block hidden">
-              Özel Eğitim ve Rehabilitasyon Merkezi
-            </p>
           </div>
         </a>
       </div>

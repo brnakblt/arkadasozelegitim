@@ -27,6 +27,7 @@ const Contact: React.FC = () => {
 
   const [kvkkApproved, setKvkkApproved] = useState(false);
   const [kvkkError, setKvkkError] = useState("");
+  const [isKvkkOpen, setIsKvkkOpen] = useState(false);
 
   const validateField = (name: string, value: string) => {
     switch (name) {
@@ -361,69 +362,93 @@ const Contact: React.FC = () => {
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 bg-gray-50 rounded-xl text-sm text-gray-600 leading-relaxed">
-                  <p className="mb-4">
-                    Bu formu doldurarak aşağıdaki kanun ve yönetmeliklere göre
-                    kişisel verilerinizin işlenmesine izin vermiş olursunuz:
-                  </p>
-                  <ul className="list-disc pl-5 space-y-2">
-                    <li>
-                      <a
-                        href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        6698 Sayılı Kişisel Verilerin Korunması Kanunu
-                      </a>{" "}
-                      (07.04.2016)
-                    </li>
-                    <li>
-                      <a
-                        href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=24038&MevzuatTur=7&MevzuatTertip=5"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim
-                        Hale Getirilmesi Hakkında Yönetmelik
-                      </a>{" "}
-                      (28.10.2017)
-                    </li>
-                  </ul>
-                  <p className="mt-4">
-                    Kişisel verileriniz, size daha iyi hizmet sunabilmek,
-                    iletişim kurabilmek ve yasal yükümlülüklerimizi yerine
-                    getirebilmek amacıyla işlenmektedir. Verileriniz hiçbir
-                    şekilde üçüncü şahıslarla paylaşılmamakta ve yalnızca hizmet
-                    amacıyla kullanılmaktadır.
-                  </p>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <div className="flex items-center h-5 mt-1">
-                    <input
-                      id="kvkk"
-                      name="kvkk"
-                      type="checkbox"
-                      checked={kvkkApproved}
-                      onChange={(e) => {
-                        setKvkkApproved(e.target.checked);
-                        if (e.target.checked) {
-                          setKvkkError("");
-                        }
-                      }}
-                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                  </div>
-                  <label
-                    htmlFor="kvkk"
-                    className="font-body text-sm text-gray-600"
+                {/* KVKK Section with Accordion */}
+                <div className="bg-gray-50 rounded-xl overflow-hidden">
+                  <div
+                    onClick={() => setIsKvkkOpen(!isKvkkOpen)}
+                    className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition-colors duration-200"
                   >
-                    Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
-                    okudum ve onaylıyorum.{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex items-center h-5 mt-1">
+                        <input
+                          id="kvkk"
+                          name="kvkk"
+                          type="checkbox"
+                          checked={kvkkApproved}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            setKvkkApproved(e.target.checked);
+                            if (e.target.checked) {
+                              setKvkkError("");
+                            }
+                          }}
+                          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                      </div>
+                      <label
+                        htmlFor="kvkk"
+                        className="font-body text-sm text-gray-600"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
+                        okudum ve onaylıyorum.{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                    </div>
+                    <svg
+                      className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                        isKvkkOpen ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Collapsible Content */}
+                  <div
+                    className={`transition-all duration-300 ease-in-out ${
+                      isKvkkOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    } overflow-hidden`}
+                  >
+                    <div className="p-4 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
+                      <p className="mb-2">İlgili kanun ve yönetmelikler:</p>
+                      <ul className="list-disc pl-5 space-y-2 mb-2">
+                        <li>
+                          <a
+                            href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            KVKK
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=24038&MevzuatTur=7&MevzuatTertip=5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            Veri İşleme Yönetmeliği
+                          </a>
+                        </li>
+                      </ul>
+                      <p>
+                        Kişisel verileriniz hizmet sunumu ve yasal yükümlülükler
+                        kapsamında işlenmekte olup, üçüncü şahıslarla
+                        paylaşılmamaktadır.
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 {kvkkError && (
                   <p className="text-red-500 text-sm">{kvkkError}</p>
