@@ -231,42 +231,6 @@ const Process: React.FC = () => {
             ))}
           </div>
         </div>
-
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-4 bg-white rounded-full px-8 py-4 card-shadow">
-            <div className="flex -space-x-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full border-2 border-white flex items-center justify-center"
-                >
-                  <span className="text-white font-body font-semibold text-sm">
-                    {i}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="text-left">
-              <div className="font-display font-bold text-neutral-dark">
-                Başlamaya hazır mısınız?
-              </div>
-              <div className="font-body text-sm text-neutral-dark/70">
-                500+ mutlu aileye katılın
-              </div>
-            </div>
-            <button
-              onClick={() =>
-                document
-                  .getElementById("contact")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="bg-primary text-white px-6 py-3 rounded-full font-body font-semibold hover:bg-primary/90 transition-colors duration-300"
-            >
-              Hemen Başlayın
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );

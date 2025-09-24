@@ -62,8 +62,8 @@ const Header: React.FC = () => {
       role="banner"
     >
       {/* Logo - Absolutely positioned */}
-      <div className="absolute top-0 left-0 h-16 flex items-center pl-20">
-        {/* Added pl-20 for some padding from the edge */}
+      <div className="absolute top-0 left-0 h-16 flex items-center pl-4 lg:pl-20">
+        {/* Added responsive padding */}
         <a
           href="#home"
           onClick={(e) => {
@@ -73,26 +73,28 @@ const Header: React.FC = () => {
           className="flex items-center"
         >
           <img
-            className="h-16 w-auto"
+            className="h-12 lg:h-16 w-auto"
             src="/images/logo.svg"
             alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi"
           />
-
-          <img
-            className="h-16 w-auto"
-            src="/images/logo_isim.svg"
-            alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi"
-          />
+          <div className="ml-2 lg:ml-4 flex flex-col justify-center">
+            <h1 className="font-display text-lg lg:text-2xl font-semibold text-primary leading-tight">
+              Arkadaş
+            </h1>
+            <p className="font-display text-sm lg:text-base font-semibold text-secondary leading-tight lg:block hidden">
+              Özel Eğitim ve Rehabilitasyon Merkezi
+            </p>
+          </div>
         </a>
       </div>
 
-      <div className="max-w-7xl mx-auto h-16 pl-20">
-        {/* Added pl-20 to make space for the logo */}
+      <div className="max-w-7xl mx-auto h-16 pl-4 lg:pl-20">
+        {/* Added responsive padding */}
         <div className="flex justify-end items-center h-16">
           {/* Changed justify-between to justify-end */}
           {/* Desktop Navigation */}
           <nav
-            className="hidden md:flex items-center space-x-8"
+            className="hidden md:flex items-center space-x-4 lg:space-x-8"
             role="navigation"
             aria-label="Ana menü"
           >
@@ -112,7 +114,7 @@ const Header: React.FC = () => {
             ))}
             <button
               onClick={() => scrollToSection("contact")}
-              className="ml-8 bg-primary text-white px-6 py-2 rounded-full font-body font-medium hover:bg-primary/90 transition-colors duration-200"
+              className="ml-8 bg-primary text-white px-6 py-2 rounded-full font-body text-sm font-medium hover:bg-primary/90 transition-colors duration-200"
             >
               Randevu Al
             </button>

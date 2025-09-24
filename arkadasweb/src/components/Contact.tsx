@@ -5,25 +5,162 @@ const Contact: React.FC = () => {
     name: "",
     email: "",
     phone: "",
+    address: "",
     message: "",
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    message: "",
+  });
+
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    phone: false,
+    address: false,
+    message: false,
+  });
+
+  const [kvkkApproved, setKvkkApproved] = useState(false);
+  const [kvkkError, setKvkkError] = useState("");
+
+  const validateField = (name: string, value: string) => {
+    switch (name) {
+      case "name":
+        return value.trim() === "" ? "Ad Soyad alanı zorunludur" : "";
+      case "email":
+        return value.trim() === ""
+          ? "E-posta alanı zorunludur"
+          : !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)
+          ? "Geçerli bir e-posta adresi giriniz"
+          : "";
+      case "phone":
+        return value.trim() === ""
+          ? "Telefon numarası zorunludur"
+          : !/^[0-9\s()-]+$/.test(value)
+          ? "Geçerli bir telefon numarası giriniz"
+          : "";
+      case "address":
+        return value.trim() === "" ? "Lütfen bir adres giriniz" : "";
+      case "message":
+        return value.trim() === "" ? "Mesaj alanı zorunludur" : "";
+      default:
+        return "";
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
-    // Reset form
-    setFormData({ name: "", email: "", phone: "", message: "" });
-    alert("Mesajınız için teşekkürler! En kısa sürede size dönüş yapacağız.");
+
+    if (!kvkkApproved) {
+      setKvkkError(
+        "Kişisel verilerin işlenmesi hakkında bilgilendirmeyi okuyup onaylamanız gerekmektedir."
+      );
+      return;
+    }
+
+    // Validate all fields
+    const newErrors = {
+      name: validateField("name", formData.name),
+      email: validateField("email", formData.email),
+      phone: validateField("phone", formData.phone),
+      address: validateField("address", formData.address),
+      message: validateField("message", formData.message),
+    };
+
+    setErrors(newErrors);
+    setTouched({
+      name: true,
+      email: true,
+      phone: true,
+      address: true,
+      message: true,
+    });
+
+    // Check if there are any errors
+    if (Object.values(newErrors).every((error) => error === "")) {
+      // Form is valid, proceed with submission
+      console.log("Form submitted:", formData);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        message: "",
+      });
+      setTouched({
+        name: false,
+        email: false,
+        phone: false,
+        address: false,
+        message: false,
+      });
+      alert("Mesajınız için teşekkürler! En kısa sürede size dönüş yapacağız.");
+    }
+  };
+
+  const handleTextAreaResize = (element: HTMLTextAreaElement) => {
+    // Reset height to auto first to handle text removal
+    element.style.height = "auto";
+    // Set height to scrollHeight to fit content
+    element.style.height = `${element.scrollHeight}px`;
   };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // Handle textarea auto-resize
+    if (e.target instanceof HTMLTextAreaElement) {
+      handleTextAreaResize(e.target);
+    }
+
+    // Clear error when the user starts typing in a field
+    if (value.trim() !== "") {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    } else if (touched[name as keyof typeof touched]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: validateField(name, value),
+      }));
+    }
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name } = e.target;
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+    const error = validateField(name, e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
+
+    // If there is an error (field is empty), set a timeout to clear it after 5 seconds
+    if (error) {
+      setTimeout(() => {
+        setErrors((prev) => ({
+          ...prev,
+          [name]: "",
+        }));
+      }, 5000); // 5 seconds
+    }
   };
 
   return (
@@ -90,18 +227,26 @@ const Contact: React.FC = () => {
                     htmlFor="name"
                     className="block font-body font-medium text-neutral-dark mb-2"
                   >
-                    Ad Soyad *
+                    Ad Soyad <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     id="name"
                     name="name"
-                    required
+                    aria-required="true"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-body"
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                      touched.name && errors.name
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-gray-300 focus:border-transparent"
+                    }`}
                     placeholder="Adınız ve soyadınız"
                   />
+                  {touched.name && errors.name && (
+                    <p className="mt-1 text-red-500 text-sm">{errors.name}</p>
+                  )}
                 </div>
 
                 <div>
@@ -109,18 +254,26 @@ const Contact: React.FC = () => {
                     htmlFor="email"
                     className="block font-body font-medium text-neutral-dark mb-2"
                   >
-                    E-posta Adresi *
+                    E-posta Adresi <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
-                    required
+                    aria-required="true"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-body"
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                      touched.email && errors.email
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-gray-300 focus:border-transparent"
+                    }`}
                     placeholder="ornek@email.com"
                   />
+                  {touched.email && errors.email && (
+                    <p className="mt-1 text-red-500 text-sm">{errors.email}</p>
+                  )}
                 </div>
               </div>
 
@@ -129,17 +282,54 @@ const Contact: React.FC = () => {
                   htmlFor="phone"
                   className="block font-body font-medium text-neutral-dark mb-2"
                 >
-                  Telefon Numarası
+                  Telefon Numarası <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
                   id="phone"
                   name="phone"
+                  aria-required="true"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-body"
-                  placeholder="0555 123 45 67"
+                  onBlur={handleBlur}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                    touched.phone && errors.phone
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                  }`}
+                  placeholder="+90 555 123 45 67"
                 />
+                {touched.phone && errors.phone && (
+                  <p className="mt-1 text-red-500 text-sm">{errors.phone}</p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="address"
+                  className="block font-body font-medium text-neutral-dark mb-2"
+                >
+                  Adres <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="address"
+                  name="address"
+                  aria-required="true"
+                  rows={1}
+                  value={formData.address}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  style={{ minHeight: "42px", overflowY: "hidden" }}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                    touched.address && errors.address
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                  }`}
+                  placeholder="Sokak, Mahalle, Bina ve Daire No, İlçe / İzmir"
+                />
+                {touched.address && errors.address && (
+                  <p className="mt-1 text-red-500 text-sm">{errors.address}</p>
+                )}
               </div>
 
               <div>
@@ -147,18 +337,97 @@ const Contact: React.FC = () => {
                   htmlFor="message"
                   className="block font-body font-medium text-neutral-dark mb-2"
                 >
-                  Mesajınız *
+                  Mesajınız <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   id="message"
                   name="message"
-                  required
-                  rows={5}
+                  aria-required="true"
+                  rows={2}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 font-body resize-none"
-                  placeholder="Çocuğunuzun durumu ve ihtiyaçları hakkında bize bilgi verin..."
+                  onBlur={handleBlur}
+                  style={{ minHeight: "84px", overflowY: "hidden" }}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                    touched.message && errors.message
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                  }`}
+                  placeholder="Bize çocuğunuzun ve sizin ihtiyaçlarınızı kısaca anlatmak ister misiniz? Böylece size en iyi şekilde destek olabiliriz 💚"
                 />
+                {touched.message && errors.message && (
+                  <p className="mt-1 text-red-500 text-sm">{errors.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-50 rounded-xl text-sm text-gray-600 leading-relaxed">
+                  <p className="mb-4">
+                    Bu formu doldurarak aşağıdaki kanun ve yönetmeliklere göre
+                    kişisel verilerinizin işlenmesine izin vermiş olursunuz:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li>
+                      <a
+                        href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        6698 Sayılı Kişisel Verilerin Korunması Kanunu
+                      </a>{" "}
+                      (07.04.2016)
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=24038&MevzuatTur=7&MevzuatTertip=5"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim
+                        Hale Getirilmesi Hakkında Yönetmelik
+                      </a>{" "}
+                      (28.10.2017)
+                    </li>
+                  </ul>
+                  <p className="mt-4">
+                    Kişisel verileriniz, size daha iyi hizmet sunabilmek,
+                    iletişim kurabilmek ve yasal yükümlülüklerimizi yerine
+                    getirebilmek amacıyla işlenmektedir. Verileriniz hiçbir
+                    şekilde üçüncü şahıslarla paylaşılmamakta ve yalnızca hizmet
+                    amacıyla kullanılmaktadır.
+                  </p>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <div className="flex items-center h-5 mt-1">
+                    <input
+                      id="kvkk"
+                      name="kvkk"
+                      type="checkbox"
+                      checked={kvkkApproved}
+                      onChange={(e) => {
+                        setKvkkApproved(e.target.checked);
+                        if (e.target.checked) {
+                          setKvkkError("");
+                        }
+                      }}
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                  </div>
+                  <label
+                    htmlFor="kvkk"
+                    className="font-body text-sm text-gray-600"
+                  >
+                    Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
+                    okudum ve onaylıyorum.{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
+                </div>
+                {kvkkError && (
+                  <p className="text-red-500 text-sm">{kvkkError}</p>
+                )}
               </div>
 
               <button
@@ -200,7 +469,7 @@ const Contact: React.FC = () => {
                       E-posta
                     </h4>
                     <p className="font-body text-white/80">
-                      info@arkadasozelegitim.com
+                      arkadasozelegitim@hotmail.com
                     </p>
                   </div>
                 </div>
@@ -225,10 +494,7 @@ const Contact: React.FC = () => {
                     <h4 className="font-body font-semibold text-white mb-1">
                       Telefon
                     </h4>
-                    <p className="font-body text-white/80">0555 123 45 67</p>
-                    <p className="font-body text-white/60 text-sm">
-                      WhatsApp mevcut
-                    </p>
+                    <p className="font-body text-white/80">+90 506 810 33 21</p>
                   </div>
                 </div>
 
@@ -259,11 +525,11 @@ const Contact: React.FC = () => {
                       Adres
                     </h4>
                     <p className="font-body text-white/80">
-                      Örnek Mahallesi
+                      Maltepe Mahallesi 8108. Sk. No:9
                       <br />
-                      Arkadaş Sokak No: 123
+                      35600 Çiğli/İzmir
                       <br />
-                      İstanbul, Türkiye
+                      İzmir
                     </p>
                   </div>
                 </div>
@@ -297,32 +563,6 @@ const Contact: React.FC = () => {
                     Kapalı
                   </span>
                 </div>
-              </div>
-            </div>
-
-            {/* Emergency Contact */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8">
-              <h3 className="font-display text-2xl font-bold text-white mb-6">
-                Acil Durum
-              </h3>
-
-              <p className="font-body text-white/80 mb-4">
-                Acil durumlar için 7/24 ulaşabileceğiniz telefon hattımız:
-              </p>
-
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
-                  <svg
-                    className="w-5 h-5 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                  </svg>
-                </div>
-                <span className="font-body font-semibold text-white text-lg">
-                  0555 987 65 43
-                </span>
               </div>
             </div>
           </div>
