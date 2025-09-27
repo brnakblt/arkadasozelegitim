@@ -164,6 +164,14 @@ const Contact: React.FC = () => {
     }
   };
 
+  const handleKvkkHeaderClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.id === "kvkk" || (target as HTMLLabelElement).htmlFor === "kvkk") {
+      return;
+    }
+    setIsKvkkOpen((prev) => !prev);
+  };
+
   return (
     <section
       id="contact"
@@ -365,7 +373,7 @@ const Contact: React.FC = () => {
                 {/* KVKK Section with Accordion */}
                 <div className="bg-gray-50 rounded-xl overflow-hidden">
                   <div
-                    onClick={() => setIsKvkkOpen(!isKvkkOpen)}
+                    onClick={handleKvkkHeaderClick}
                     className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition-colors duration-200"
                   >
                     <div className="flex items-start space-x-3">
@@ -376,7 +384,6 @@ const Contact: React.FC = () => {
                           type="checkbox"
                           checked={kvkkApproved}
                           onChange={(e) => {
-                            e.stopPropagation();
                             setKvkkApproved(e.target.checked);
                             if (e.target.checked) {
                               setKvkkError("");
@@ -388,7 +395,6 @@ const Contact: React.FC = () => {
                       <label
                         htmlFor="kvkk"
                         className="font-body text-sm text-gray-600"
-                        onClick={(e) => e.stopPropagation()}
                       >
                         Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
                         okudum ve onaylıyorum.{" "}
