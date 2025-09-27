@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 
 const Team: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState("Tümü");
+  const [activeCategory, setActiveCategory] = useState("Yönetim");
 
   const categories = [
-    "Tümü",
     "Yönetim",
     "Eğitmenler",
     "Uzmanlar",
@@ -46,10 +45,9 @@ const Team: React.FC = () => {
     },
   ];
 
-  const filteredMembers =
-    activeCategory === "Tümü"
-      ? teamMembers
-      : teamMembers.filter((member) => member.category === activeCategory);
+  const filteredMembers = teamMembers.filter(
+    (member) => member.category === activeCategory
+  );
 
   return (
     <section id="team" className="py-20 bg-gray-50">
@@ -141,22 +139,7 @@ const Team: React.FC = () => {
           ))}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <p className="font-body text-neutral-dark/80 mb-6">
-            Uzman kadromuzla tanışmak ve daha fazla bilgi almak ister misiniz?
-          </p>
-          <button
-            onClick={() =>
-              document
-                .getElementById("contact")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="bg-primary text-white px-8 py-4 rounded-full font-body font-semibold hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
-          >
-            Bizimle İletişime Geçin
-          </button>
-        </div>
+
       </div>
     </section>
   );
