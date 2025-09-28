@@ -27,7 +27,7 @@ const Hero: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(nextImage, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [currentImageIndex]);
 
   return (
     <section

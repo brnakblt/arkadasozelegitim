@@ -166,9 +166,19 @@ const Contact: React.FC = () => {
 
   const handleKvkkHeaderClick = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
-    if (target.id === "kvkk" || (target as HTMLLabelElement).htmlFor === "kvkk") {
+
+    // If the click is on the checkbox input itself, let it do its thing.
+    // The accordion should not toggle.
+    if (target.id === 'kvkk') {
       return;
     }
+
+    // If the click was on the label, prevent its default action (toggling the checkbox).
+    if (target.closest('label[for="kvkk"]')) {
+      e.preventDefault();
+    }
+
+    // For any click that wasn't on the checkbox input, toggle the accordion.
     setIsKvkkOpen((prev) => !prev);
   };
 
@@ -392,14 +402,16 @@ const Contact: React.FC = () => {
                           className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                         />
                       </div>
-                      <label
-                        htmlFor="kvkk"
-                        className="font-body text-sm text-gray-600"
-                      >
-                        Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
-                        okudum ve onaylıyorum.{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
+                      <div className="flex-initial">
+                        <label
+                          htmlFor="kvkk"
+                          className="font-body text-sm text-gray-600"
+                        >
+                          Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
+                          okudum ve onaylıyorum.{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                      </div>
                     </div>
                     <svg
                       className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
