@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, service }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-      <div className="bg-white rounded-lg p-8 max-w-4xl w-full">
+      <div className="bg-white rounded-lg p-8 max-w-6xl w-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">{service.title}</h2>
           <button onClick={onClose} className="text-2xl">&times;</button>

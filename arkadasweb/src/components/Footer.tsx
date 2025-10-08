@@ -139,7 +139,7 @@ const Footer: React.FC = () => {
                     />
                   </svg>
                   <span className="font-body text-white/80 text-sm">
-                    info@arkadasozelegitim.com
+                    arkadasozelegitim@hotmail.com
                   </span>
                 </div>
 
@@ -159,11 +159,8 @@ const Footer: React.FC = () => {
                   </svg>
                   <div>
                     <span className="font-body text-white/80 text-sm">
-                      0555 123 45 67
+                      +90 506 810 33 21
                     </span>
-                    <div className="font-body text-white/60 text-xs">
-                      WhatsApp mevcut
-                    </div>
                   </div>
                 </div>
 
@@ -188,11 +185,11 @@ const Footer: React.FC = () => {
                     />
                   </svg>
                   <span className="font-body text-white/80 text-sm">
-                    Örnek Mahallesi
+                    Maltepe Mahallesi 8108. Sk. No:9
                     <br />
-                    Arkadaş Sokak No: 123
+                    35600 Çiğli/İzmir
                     <br />
-                    İstanbul, Türkiye
+                    İzmir
                   </span>
                 </div>
               </div>
