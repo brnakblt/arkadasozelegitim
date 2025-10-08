@@ -1,13 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUsers,
   faComments,
   faBrain,
 } from "@fortawesome/free-solid-svg-icons";
+import Modal from "./Modal";
+
+interface Service {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  features: string[];
+}
 
 const Services: React.FC = () => {
-  const services = [
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+
+  const openModal = (service: Service) => {
+    setSelectedService(service);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedService(null);
+  };
+
+  const services: Service[] = [
     {
       icon: faComments,
       title: "Dil ve Konuşma Terapisi",
@@ -125,7 +146,7 @@ const Services: React.FC = () => {
 
                 {/* Learn More Link */}
                 <div className="mt-6 pt-6 border-t border-gray-100">
-                  <button className="font-body text-primary font-semibold text-sm hover:text-primary/80 transition-colors duration-200 flex items-center space-x-2 group">
+                  <button onClick={() => openModal(service)} className="font-body text-primary font-semibold text-sm hover:text-primary/80 transition-colors duration-200 flex items-center space-x-2 group">
                     <span>Detayları Görün</span>
                     <svg
                       className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
@@ -150,6 +171,7 @@ const Services: React.FC = () => {
           ))}
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal} service={selectedService} />
     </section>
   );
 };

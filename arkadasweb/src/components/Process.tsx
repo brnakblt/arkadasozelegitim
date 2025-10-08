@@ -181,26 +181,7 @@ const Process: React.FC = () => {
             ))}
           </div>
 
-          <div className="text-center mt-20">
-            <h3 className="font-display text-2xl md:text-3xl font-bold text-neutral-dark mb-4">
-              Çocuğunuzun Gelişimi İçin
-              <span className="text-gradient block">Hemen Başlayın</span>
-            </h3>
-            <p className="font-body text-lg text-neutral-dark/80 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Uzman ekibimizle tanışın ve çocuğunuzun bireysel ihtiyaçlarına
-              uygun eğitim programını birlikte belirleyelim.
-            </p>
-            <button
-              onClick={() =>
-                document
-                  .getElementById("contact")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="bg-primary text-white px-8 py-4 rounded-full font-body font-semibold hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 shadow-lg"
-            >
-              Randevu Alın
-            </button>
-          </div>
+
         </div>
       </div>
     </section>

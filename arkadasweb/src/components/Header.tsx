@@ -63,7 +63,7 @@ const Header: React.FC = () => {
       role="banner"
     >
       {/* Logo - Absolutely positioned */}
-      <div className="absolute top-0 left-0 h-16 flex items-center pl-4 lg:pl-20">
+      <div className="absolute top-0 left-0 h-16 flex items-center pl-4">
         {/* Added responsive padding */}
         <a
           href="#home"
@@ -78,17 +78,13 @@ const Header: React.FC = () => {
             src="/images/logo.svg"
             alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi"
           />
-          <div className="ml-2 lg:ml-4 flex flex-col justify-center">
-            <h1 className="font-display text-lg lg:text-2xl font-semibold text-primary leading-tight">
-              Arkadaş
-            </h1>
-          </div>
+
         </a>
       </div>
 
-      <div className="max-w-7xl mx-auto h-16 pl-4 lg:pl-20">
+      <div className="max-w-7xl mx-auto h-16">
         {/* Added responsive padding */}
-        <div className="flex justify-end items-center h-16">
+        <div className="flex justify-end items-center h-16 pr-4 lg:pr-20">
           {/* Changed justify-between to justify-end */}
           {/* Desktop Navigation */}
           <nav
@@ -110,12 +106,7 @@ const Header: React.FC = () => {
                 ></span>
               </button>
             ))}
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="ml-8 bg-primary text-white px-6 py-2 rounded-full font-body text-sm font-medium hover:bg-primary/90 transition-colors duration-200"
-            >
-              Randevu Al
-            </button>
+
           </nav>
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -165,14 +156,7 @@ const Header: React.FC = () => {
                   {item.label}
                 </button>
               ))}
-              <div className="border-t border-gray-100 pt-4 mt-4">
-                <button
-                  onClick={() => scrollToSection("contact")}
-                  className="w-full bg-primary text-white px-6 py-3 rounded-lg font-body font-medium hover:bg-primary/90 transition-colors duration-200"
-                >
-                  Randevu Al
-                </button>
-              </div>
+
             </div>
           </div>
         )}
