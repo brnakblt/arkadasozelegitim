@@ -5,37 +5,37 @@ const Gallery: React.FC = () => {
 
   const images = [
     {
-      src: "/images/1.jpg",
+      src: "/images/1.webp",
       alt: "Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi - Uzman eğitmenler ile bireysel çalışmalar",
       title: "Bireysel Çalışmalar",
       category: "Eğitim",
     },
     {
-      src: "/images/2.jpg",
+      src: "/images/2.webp",
       alt: "Arkadaş Özel Eğitim Merkezi - Modern özel eğitim sınıfları, çocuklar öğreniyor, destekleyici eğitim ortamı",
       title: "Özel Eğitim Sınıfları",
       category: "Eğitim",
     },
     {
-      src: "/images/3.jpg",
+      src: "/images/3.webp",
       alt: "Arkadaş Özel Eğitim Merkezi - Eğitici aktiviteler, renkli öğrenme materyalleri, interaktif öğrenme",
       title: "Eğitici Aktiviteler",
       category: "Sosyal Aktivite",
     },
     {
-      src: "/images/4.jpg",
+      src: "/images/4.webp",
       alt: "Arkadaş Özel Eğitim Merkezi - Bireyselleştirilmiş eğitim çalışmaları",
       title: "Bireysel Eğitim",
       category: "Eğitim",
     },
     {
-      src: "/images/5.jpg",
+      src: "/images/5.webp",
       alt: "Arkadaş Özel Eğitim Merkezi - Grup çalışmaları, sosyal beceri geliştirme, çocuklar birlikte öğreniyor",
       title: "Grup Çalışmaları",
       category: "Sosyal Aktivite",
     },
     {
-      src: "/images/6.jpg",
+      src: "/images/6.webp",
       alt: "Arkadaş Özel Eğitim Merkezi - Aile danışmanlığı ve rehberlik hizmetleri",
       title: "Aile Danışmanlığı",
       category: "Danışmanlık",
@@ -87,9 +87,9 @@ const Gallery: React.FC = () => {
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredImages.map((image, index) => (
+          {filteredImages.map((image) => (
             <div
-              key={index}
+              key={image.src}
               className="group relative overflow-hidden rounded-3xl cursor-pointer transform transition-all duration-500 hover:scale-105"
               onClick={() => setSelectedImage(image.src)}
             >
@@ -97,6 +97,7 @@ const Gallery: React.FC = () => {
                 <img
                   src={image.src}
                   alt={image.alt}
+                  loading="lazy"
                   className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   style={{ width: "100%", height: "256px" }}
                 />

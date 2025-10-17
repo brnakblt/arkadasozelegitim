@@ -20,7 +20,7 @@ const Team: React.FC = () => {
       name: "Psk. Halil Çetinkaya",
       title: "Merkez Müdürü",
       category: ["Yönetim"],
-      image: "/images/Profil Fotoğrafları/halilcetinkaya.jpg",
+      image: "/images/Profil Fotoğrafları/halilcetinkaya.webp",
       specialization: "Çocuk Gelişimi ve Eğitimi Uzmanı",
       description: "20 yıllık deneyim",
       objectPosition: "center",
@@ -29,7 +29,7 @@ const Team: React.FC = () => {
       name: "Prof. Yusuf Ziya Tavil",
       title: "Özel Eğitim Uzmanı",
       category: ["Eğitim Danışmanı"],
-      image: "/images/Profil Fotoğrafları/yusufziyatavil.jpg",
+      image: "/images/Profil Fotoğrafları/yusufziyatavil.webp",
       specialization: "Davranış ve Gelişim Uzmanı",
       description: "15 yıllık deneyim",
       objectPosition: "50% 30%", // Yatayda ortalı, dikeyde %30 (biraz yukarı)
@@ -38,7 +38,7 @@ const Team: React.FC = () => {
       name: "Psk. Damla Mercan",
       title: "Psikolog",
       category: ["Psikolog"],
-      image: "/images/Profil Fotoğrafları/damlamercan.jpeg",
+      image: "/images/Profil Fotoğrafları/damlamercan.webp",
       specialization: "Çocuk ve Ergen Psikolojisi",
       description: "10 yıllık deneyim",
       objectPosition: "center",
@@ -47,7 +47,7 @@ const Team: React.FC = () => {
       name: "Ahmet Sait Kurt",
       title: "Dil ve Konuşma Terapisti",
       category: ["Dil Ve Konuşma Terapisti"],
-      image: "/images/Profil Fotoğrafları/ahmetsaitkurt.jpeg",
+      image: "/images/Profil Fotoğrafları/ahmetsaitkurt.webp",
       specialization: "Dil ve Konuşma Bozuklukları",
       description: "5 yıllık deneyim",
       objectPosition: "center",
@@ -56,7 +56,7 @@ const Team: React.FC = () => {
       name: "Ömür Mutlu",
       title: "Fizyoterapist",
       category: ["Fizyoterapist"],
-      image: "/images/Profil Fotoğrafları/omurmutlu.jpeg",
+      image: "/images/Profil Fotoğrafları/omurmutlu.webp",
       specialization: "Pediatrik Fizyoterapi",
       description: "7 yıllık deneyim",
       objectPosition: "center",
@@ -65,7 +65,7 @@ const Team: React.FC = () => {
       name: "Psk. Gaye Nur Yıldız",
       title: "Aile Danışmanı",
       category: ["Danışmanlar", "Psikolog"],
-      image: "/images/4.jpg", // Bu resim yolu güncellenecek
+      image: "/images/4.webp", // Bu resim yolu güncellenecek
       specialization: "Aile ve Çocuk Psikolojisi",
       description: "12 yıllık deneyim",
       objectPosition: "center",
@@ -74,19 +74,22 @@ const Team: React.FC = () => {
       name: "Ali Can",
       title: "Özel Eğitim Öğretmeni",
       category: ["Özel Eğitim Alanı Öğretmeni"],
-      image: "/images/5.jpg", // Bu resim yolu güncellenecek
+      image: "/images/5.webp", // Bu resim yolu güncellenecek
       specialization: "Özel Gereksinimli Çocuklar Eğitimi",
       description: "8 yıllık deneyim",
       objectPosition: "center",
     },
   ];
 
-  const filteredMembers =
-    activeCategory === "Tümü"
-      ? teamMembers.slice(0, 8)
-      : teamMembers.filter((member) =>
-          member.category.includes(activeCategory)
-        );
+  const filteredMembers = useMemo(
+    () =>
+      activeCategory === "Tümü"
+        ? teamMembers.slice(0, 8)
+        : teamMembers.filter((member) =>
+            member.category.includes(activeCategory)
+          ),
+    [activeCategory, teamMembers]
+  );
 
   return (
     <section id="team" className="py-20 bg-gray-50">
@@ -125,9 +128,9 @@ const Team: React.FC = () => {
 
         {/* Team Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filteredMembers.map((member, index) => (
+          {filteredMembers.map((member) => (
             <div
-              key={index}
+              key={member.name}
               className="group relative overflow-hidden bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
             >
               <div className="relative z-20">
@@ -135,6 +138,7 @@ const Team: React.FC = () => {
                   <img
                     src={member.image}
                     alt={member.name}
+                    loading="lazy"
                     className="w-full h-full object-cover rounded-2xl"
                     style={{ objectPosition: member.objectPosition || "center" }}
                   />
