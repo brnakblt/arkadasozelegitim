@@ -128,34 +128,39 @@ const Team: React.FC = () => {
           {filteredMembers.map((member, index) => (
             <div
               key={index}
-              className="group bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+              className="group relative overflow-hidden bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
             >
-              <div className="w-56 h-56 mx-auto mb-6">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover rounded-2xl"
-                  style={{ objectPosition: member.objectPosition || "center" }}
-                />
+              <div className="relative z-20">
+                <div className="w-56 h-56 mx-auto mb-6">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover rounded-2xl"
+                    style={{ objectPosition: member.objectPosition || "center" }}
+                  />
+                </div>
+
+                <div className="text-center">
+                  <h3 className="font-display text-xl font-bold text-neutral-dark mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-primary font-body font-medium text-sm mb-2">
+                    {member.title}
+                  </p>
+                  <p className="text-neutral-dark/70 font-body text-sm mb-2">
+                    {member.specialization}
+                  </p>
+                  <p className="text-neutral-dark/60 font-body text-xs">
+                    {member.description}
+                  </p>
+
+                  {/* Social Links */}
+                  <div className="flex justify-center space-x-4 mt-4"></div>
+                </div>
               </div>
 
-              <div className="text-center">
-                <h3 className="font-display text-xl font-bold text-neutral-dark mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-primary font-body font-medium text-sm mb-2">
-                  {member.title}
-                </p>
-                <p className="text-neutral-dark/70 font-body text-sm mb-2">
-                  {member.specialization}
-                </p>
-                <p className="text-neutral-dark/60 font-body text-xs">
-                  {member.description}
-                </p>
-
-                {/* Social Links */}
-                <div className="flex justify-center space-x-4 mt-4"></div>
-              </div>
+              {/* Gradient Hover Effect */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-secondary/40 to-transparent transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0 z-10"></div>
             </div>
           ))}
         </div>
