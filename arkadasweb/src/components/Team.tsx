@@ -4,16 +4,12 @@ const Team: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("Tümü");
 
   const categories = [
-    "Tümü",
     "Yönetim",
     "Psikolog",
     "Eğitim Danışmanı",
-    "Danışmanlar",
-    "Dil Ve Konuşma Terapisti",
-    "Özel Eğitim Alanı Öğretmeni",
-    "Çocuk Gelişimi ve Eğitimcisi",
-    "Okul Öncesi Öğretmeni",
-    "Zihinsel Engelliler Sınıf Öğretmeni",
+    "Aile Danışmanı",
+    "Dil ve Konuşma Terapisti",
+    "Öğretmen",
     "Fizyoterapist",
     "Halkla İlişkiler",
     "Şoför",
