@@ -5,15 +5,14 @@ const Team: React.FC = () => {
 
   const categories = [
     "Yönetim",
-    "Psikolog",
     "Eğitim Danışmanı",
-    "Aile Danışmanı",
+    "Psikolog",
     "Dil ve Konuşma Terapisti",
     "Öğretmen",
     "Fizyoterapist",
     "Halkla İlişkiler",
     "Şoför",
-    "Temizlik personeli",
+    "Temizlik Personeli",
   ];
 
   const teamMembers = [
@@ -21,47 +20,70 @@ const Team: React.FC = () => {
       name: "Psk. Halil Çetinkaya",
       title: "Merkez Müdürü",
       category: ["Yönetim"],
-      image: "/images/1.jpg", // Örnek resim yolu
+      image: "/images/Profil Fotoğrafları/halilcetinkaya.jpg",
       specialization: "Çocuk Gelişimi ve Eğitimi Uzmanı",
       description: "20 yıllık deneyim",
+      objectPosition: "center",
+    },
+    {
+      name: "Prof. Yusuf Ziya Tavil",
+      title: "Özel Eğitim Uzmanı",
+      category: ["Eğitim Danışmanı"],
+      image: "/images/Profil Fotoğrafları/yusufziyatavil.jpg",
+      specialization: "Davranış ve Gelişim Uzmanı",
+      description: "15 yıllık deneyim",
+      objectPosition: "50% 30%", // Yatayda ortalı, dikeyde %30 (biraz yukarı)
     },
     {
       name: "Psk. Damla Mercan",
       title: "Psikolog",
       category: ["Psikolog"],
-      image: "/images/2.jpg", // Örnek resim yolu
+      image: "/images/Profil Fotoğrafları/damlamercan.jpeg",
       specialization: "Çocuk ve Ergen Psikolojisi",
       description: "10 yıllık deneyim",
+      objectPosition: "center",
     },
     {
-      name: "Doç. Dr. Yusuf Ziya Tavil",
-      title: "Özel Eğitim Uzmanı",
-      category: ["Eğitim Danışmanı"],
-      image: "/images/3.jpg", // Örnek resim yolu
-      specialization: "Davranış ve Gelişim Uzmanı",
-      description: "15 yıllık deneyim",
+      name: "Ahmet Sait Kurt",
+      title: "Dil ve Konuşma Terapisti",
+      category: ["Dil Ve Konuşma Terapisti"],
+      image: "/images/Profil Fotoğrafları/ahmetsaitkurt.jpeg",
+      specialization: "Dil ve Konuşma Bozuklukları",
+      description: "5 yıllık deneyim",
+      objectPosition: "center",
+    },
+    {
+      name: "Ömür Mutlu",
+      title: "Fizyoterapist",
+      category: ["Fizyoterapist"],
+      image: "/images/Profil Fotoğrafları/omurmutlu.jpeg",
+      specialization: "Pediatrik Fizyoterapi",
+      description: "7 yıllık deneyim",
+      objectPosition: "center",
     },
     {
       name: "Psk. Gaye Nur Yıldız",
       title: "Aile Danışmanı",
       category: ["Danışmanlar", "Psikolog"],
-      image: "/images/4.jpg", // Örnek resim yolu
+      image: "/images/4.jpg", // Bu resim yolu güncellenecek
       specialization: "Aile ve Çocuk Psikolojisi",
       description: "12 yıllık deneyim",
+      objectPosition: "center",
     },
     {
       name: "Ali Can",
       title: "Özel Eğitim Öğretmeni",
       category: ["Özel Eğitim Alanı Öğretmeni"],
-      image: "/images/5.jpg", // Örnek resim yolu
+      image: "/images/5.jpg", // Bu resim yolu güncellenecek
       specialization: "Özel Gereksinimli Çocuklar Eğitimi",
       description: "8 yıllık deneyim",
+      objectPosition: "center",
     },
   ];
 
   const filteredMembers =
     activeCategory === "Tümü"
-      ? teamMembers
+      ? teamMembers.slice(0, 8)
       : teamMembers.filter((member) =>
           member.category.includes(activeCategory)
         );
@@ -85,12 +107,12 @@ const Team: React.FC = () => {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-nowrap overflow-x-auto gap-4 mb-12 py-4">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-6 py-3 rounded-full font-body font-medium transition-all duration-300 ${
+              className={`px-6 py-3 rounded-full font-body font-medium transition-all duration-300 whitespace-nowrap ${
                 activeCategory === category
                   ? "bg-primary text-white shadow-lg"
                   : "bg-gray-100 text-neutral-dark hover:bg-gray-200"
@@ -108,11 +130,12 @@ const Team: React.FC = () => {
               key={index}
               className="group bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
             >
-              <div className="aspect-w-1 aspect-h-1 mb-6">
+              <div className="w-56 h-56 mx-auto mb-6">
                 <img
                   src={member.image}
                   alt={member.name}
                   className="w-full h-full object-cover rounded-2xl"
+                  style={{ objectPosition: member.objectPosition || "center" }}
                 />
               </div>
 
