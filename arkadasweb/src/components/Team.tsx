@@ -1,56 +1,74 @@
 import React, { useState } from "react";
 
 const Team: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState("Yönetim");
+  const [activeCategory, setActiveCategory] = useState("Tümü");
 
   const categories = [
+    "Tümü",
     "Yönetim",
     "Psikolog",
+    "Eğitim Danışmanı",
+    "Danışmanlar",
     "Dil Ve Konuşma Terapisti",
     "Özel Eğitim Alanı Öğretmeni",
+    "Çocuk Gelişimi ve Eğitimcisi",
+    "Okul Öncesi Öğretmeni",
+    "Zihinsel Engelliler Sınıf Öğretmeni",
+    "Fizyoterapist",
     "Halkla İlişkiler",
-    "Şoförlerimiz",
-    "Temizlik personeli/görevlisi",
+    "Şoför",
+    "Temizlik personeli",
   ];
 
   const teamMembers = [
     {
-      name: "Dr. Ayşe Yılmaz",
+      name: "Psk. Halil Çetinkaya",
       title: "Merkez Müdürü",
-      category: "Yönetim",
-      image: "", // Bu resimler örnek, gerçek resimleri eklemeniz gerekecek
+      category: ["Yönetim"],
+      image: "/images/1.jpg", // Örnek resim yolu
       specialization: "Çocuk Gelişimi ve Eğitimi Uzmanı",
       description: "20 yıllık deneyim",
     },
     {
-      name: "Mehmet Kaya",
+      name: "Psk. Damla Mercan",
+      title: "Psikolog",
+      category: ["Psikolog"],
+      image: "/images/2.jpg", // Örnek resim yolu
+      specialization: "Çocuk ve Ergen Psikolojisi",
+      description: "10 yıllık deneyim",
+    },
+    {
+      name: "Doç. Dr. Yusuf Ziya Tavil",
       title: "Özel Eğitim Uzmanı",
-      category: "Uzmanlar",
-      image: "",
+      category: ["Eğitim Danışmanı"],
+      image: "/images/3.jpg", // Örnek resim yolu
       specialization: "Davranış ve Gelişim Uzmanı",
       description: "15 yıllık deneyim",
     },
     {
-      name: "Zeynep Demir",
+      name: "Psk. Gaye Nur Yıldız",
       title: "Aile Danışmanı",
-      category: "Danışmanlar",
-      image: "",
+      category: ["Danışmanlar", "Psikolog"],
+      image: "/images/4.jpg", // Örnek resim yolu
       specialization: "Aile ve Çocuk Psikolojisi",
       description: "12 yıllık deneyim",
     },
     {
       name: "Ali Can",
       title: "Özel Eğitim Öğretmeni",
-      category: "Eğitmenler",
-      image: "",
+      category: ["Özel Eğitim Alanı Öğretmeni"],
+      image: "/images/5.jpg", // Örnek resim yolu
       specialization: "Özel Gereksinimli Çocuklar Eğitimi",
       description: "8 yıllık deneyim",
     },
   ];
 
-  const filteredMembers = teamMembers.filter(
-    (member) => member.category === activeCategory
-  );
+  const filteredMembers =
+    activeCategory === "Tümü"
+      ? teamMembers
+      : teamMembers.filter((member) =>
+          member.category.includes(activeCategory)
+        );
 
   return (
     <section id="team" className="py-20 bg-gray-50">
@@ -117,15 +135,11 @@ const Team: React.FC = () => {
                 </p>
 
                 {/* Social Links */}
-                <div className="flex justify-center space-x-4 mt-4">
-                 
-                </div>
+                <div className="flex justify-center space-x-4 mt-4"></div>
               </div>
             </div>
           ))}
         </div>
-
-
       </div>
     </section>
   );
