@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 const Team: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("Tümü");
@@ -140,7 +140,9 @@ const Team: React.FC = () => {
                     alt={member.name}
                     loading="lazy"
                     className="w-full h-full object-cover rounded-2xl"
-                    style={{ objectPosition: member.objectPosition || "center" }}
+                    style={{
+                      objectPosition: member.objectPosition || "center",
+                    }}
                   />
                 </div>
 
