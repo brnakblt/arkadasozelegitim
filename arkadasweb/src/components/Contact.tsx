@@ -1,95 +1,91 @@
+import * as React from "react";
+import { useState } from "react";
 
-import React, { useState } from "react";
-
-type FormDataType = {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  message: string;
-};
-
-type ErrorsType = {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  message: string;
-};
-
-type TouchedType = {
-  name: boolean;
-  email: boolean;
-  phone: boolean;
-  address: boolean;
-  message: boolean;
-};
-
-const Contact = () => {
-  const [formData, setFormData] = useState<FormDataType>({
+const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     address: "",
     message: "",
   });
-  const [errors, setErrors] = useState<ErrorsType>({
+
+  const [errors, setErrors] = useState({
     name: "",
     email: "",
     phone: "",
     address: "",
     message: "",
   });
-  const [touched, setTouched] = useState<TouchedType>({
+
+  const [touched, setTouched] = useState({
     name: false,
     email: false,
     phone: false,
     address: false,
     message: false,
   });
+
   const [kvkkApproved, setKvkkApproved] = useState(false);
   const [kvkkError, setKvkkError] = useState("");
   const [isKvkkOpen, setIsKvkkOpen] = useState(false);
 
-  // Alan doğrulama fonksiyonu
   const validateField = (name: string, value: string) => {
     switch (name) {
       case "name":
-        return value.trim() === "" ? "Ad Soyad zorunlu." : "";
+        return value.trim() === "" ? "Ad Soyad alanı zorunludur" : "";
       case "email":
-        if (value.trim() === "") return "E-posta zorunlu.";
-        // Basit e-posta kontrolü
-        if (!/^\S+@\S+\.\S+$/.test(value)) return "Geçerli bir e-posta giriniz.";
-        return "";
+        return value.trim() === ""
+          ? "E-posta alanı zorunludur"
+          : !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)
+          ? "Geçerli bir e-posta adresi giriniz"
+          : "";
       case "phone":
-        return value.trim() === "" ? "Telefon zorunlu." : "";
+        return value.trim() === ""
+          ? "Telefon numarası zorunludur"
+          : !/^[0-9\s()-]+$/.test(value)
+          ? "Geçerli bir telefon numarası giriniz"
+          : "";
       case "address":
-        return value.trim() === "" ? "Adres zorunlu." : "";
+        return value.trim() === "" ? "Lütfen bir adres giriniz" : "";
       case "message":
-        return value.trim() === "" ? "Mesaj zorunlu." : "";
+        return value.trim() === "" ? "Mesaj alanı zorunludur" : "";
       default:
         return "";
     }
   };
 
-  // Form submit fonksiyonu
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors: ErrorsType = {
+
+    if (!kvkkApproved) {
+      setKvkkError(
+        "Kişisel verilerin işlenmesi hakkında bilgilendirmeyi okuyup onaylamanız gerekmektedir."
+      );
+      return;
+    }
+
+    // Validate all fields
+    const newErrors = {
       name: validateField("name", formData.name),
       email: validateField("email", formData.email),
       phone: validateField("phone", formData.phone),
       address: validateField("address", formData.address),
       message: validateField("message", formData.message),
     };
+
     setErrors(newErrors);
-    if (!kvkkApproved) {
-      setKvkkError("KVKK onayı gereklidir.");
-    } else {
-      setKvkkError("");
-    }
-    // Hatalar yoksa formu gönder
-    if (Object.values(newErrors).every((error) => error === "") && kvkkApproved) {
+    setTouched({
+      name: true,
+      email: true,
+      phone: true,
+      address: true,
+      message: true,
+    });
+
+    // Check if there are any errors
+    if (Object.values(newErrors).every((error) => error === "")) {
+      // Form is valid, proceed with submission
       console.log("Form submitted:", formData);
       setFormData({
         name: "",
@@ -188,7 +184,10 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-neutral-dark text-white relative overflow-hidden">
+    <section
+      id="contact"
+      className="py-20 bg-neutral-dark text-white relative overflow-hidden"
+    >
       {/* Background Pattern */}
       <svg
         className="absolute inset-0 w-full h-full opacity-10"
@@ -231,269 +230,289 @@ const Contact = () => {
             geçin. Uzman ekibimiz size yardımcı olmak için burada.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Form Alanı ve İletişim Bilgileri tek bir üst div ile sarıldı */}
-          <>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              ...existing code...
-            </form>
-            <div className="flex justify-center">
-              ...existing code...
-            </div>
-          </>
-        </div>
-      </div>
-    </section>
-                value={formData.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                  touched.name && errors.name
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-transparent"
-                }`}
-                placeholder="Adınızı ve Soyadınızı giriniz"
-              />
-              {touched.name && errors.name && (
-                <p className="mt-1 text-red-500 text-sm">{errors.name}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="email" className="block font-body font-medium text-neutral-dark mb-2">
-                E-posta Adresi <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                aria-required="true"
-                value={formData.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                  touched.email && errors.email
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-transparent"
-                }`}
-                placeholder="ornek@email.com"
-              />
-              {touched.email && errors.email && (
-                <p className="mt-1 text-red-500 text-sm">{errors.email}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="phone" className="block font-body font-medium text-neutral-dark mb-2">
-                Telefon Numarası <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                aria-required="true"
-                value={formData.phone}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                  touched.phone && errors.phone
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-transparent"
-                }`}
-                placeholder="+90 555 123 45 67"
-              />
-              {touched.phone && errors.phone && (
-                <p className="mt-1 text-red-500 text-sm">{errors.phone}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="address" className="block font-body font-medium text-neutral-dark mb-2">
-                Adres <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                id="address"
-                name="address"
-                aria-required="true"
-                rows={1}
-                value={formData.address}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                style={{ minHeight: "42px", overflowY: "hidden" }}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                  touched.address && errors.address
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-transparent"
-                }`}
-                placeholder="Sokak, Mahalle, Bina ve Daire No, İlçe / İzmir"
-              />
-              {touched.address && errors.address && (
-                <p className="mt-1 text-red-500 text-sm">{errors.address}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="message" className="block font-body font-medium text-neutral-dark mb-2">
-                Mesajınız <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                aria-required="true"
-                rows={2}
-                value={formData.message}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                style={{ minHeight: "84px", overflowY: "hidden" }}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                  touched.message && errors.message
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-transparent"
-                }`}
-                placeholder="Bize çocuğunuzun ve sizin ihtiyaçlarınızı kısaca anlatmak ister misiniz? Böylece size en iyi şekilde destek olabiliriz 💚"
-              />
-              {touched.message && errors.message && (
-                <p className="mt-1 text-red-500 text-sm">{errors.message}</p>
-              )}
-            </div>
-            {/* KVKK Section with Accordion */}
-            <div className="space-y-4">
-              <div className="bg-gray-50 rounded-xl overflow-hidden">
-                <div
-                  onClick={handleKvkkHeaderClick}
-                  className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition-colors duration-200"
-                >
-                  <div className="flex items-start space-x-3">
-                    <div className="flex items-center h-5 mt-1">
-                      <input
-                        id="kvkk"
-                        name="kvkk"
-                        type="checkbox"
-                        checked={kvkkApproved}
-                        onChange={(e) => {
-                          setKvkkApproved(e.target.checked);
-                          if (e.target.checked) {
-                            setKvkkError("");
-                          }
-                        }}
-                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                      />
-                    </div>
-                    <div className="flex-initial">
-                      <label htmlFor="kvkk" className="font-body text-sm text-gray-600">
-                        Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi okudum ve onaylıyorum. <span className="text-red-500">*</span>
-                      </label>
-                    </div>
-                  </div>
-                  <svg
-                    className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${isKvkkOpen ? "rotate-180" : ""}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Contact Form */}
+          <div className="bg-white rounded-3xl p-8 card-shadow">
+            <h3 className="font-display text-2xl font-bold text-neutral-dark mb-6">
+              Bize Mesaj Gönderin
+            </h3>
+
+            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block font-body font-medium text-neutral-dark mb-2"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+                    Ad Soyad <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    aria-required="true"
+                    value={formData.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                      touched.name && errors.name
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-gray-300 focus:border-transparent"
+                    }`}
+                    placeholder="Adınız ve soyadınız"
+                  />
+                  {touched.name && errors.name && (
+                    <p className="mt-1 text-red-500 text-sm">{errors.name}</p>
+                  )}
                 </div>
-                {/* Collapsible Content */}
-                <div className={`transition-all duration-300 ease-in-out ${isKvkkOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
-                  <div className="p-4 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
-                    <p className="mb-2">İlgili kanun ve yönetmelikler:</p>
-                    <ul className="list-disc pl-5 space-y-2 mb-2">
-                      <li>
-                        <a
-                          href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline"
-                        >
-                          KVKK
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=24038&MevzuatTur=7&MevzuatTertip=5"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline"
-                        >
-                          Veri İşleme Yönetmeliği
-                        </a>
-                      </li>
-                    </ul>
-                    <p>
-                      Kişisel verileriniz hizmet sunumu ve yasal yükümlülükler kapsamında işlenmekte olup, üçüncü şahıslarla paylaşılmamaktadır.
-                    </p>
-                  </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block font-body font-medium text-neutral-dark mb-2"
+                  >
+                    E-posta Adresi <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    aria-required="true"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                      touched.email && errors.email
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-gray-300 focus:border-transparent"
+                    }`}
+                    placeholder="ornek@email.com"
+                  />
+                  {touched.email && errors.email && (
+                    <p className="mt-1 text-red-500 text-sm">{errors.email}</p>
+                  )}
                 </div>
               </div>
-              {kvkkError && <p className="text-red-500 text-sm">{kvkkError}</p>}
-            </div>
-          </form>
-          {/* İletişim Bilgileri ve Sosyal Medya */}
+
+              <div>
+                <label
+                  htmlFor="phone"
+                  className="block font-body font-medium text-neutral-dark mb-2"
+                >
+                  Telefon Numarası <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  aria-required="true"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                    touched.phone && errors.phone
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                  }`}
+                  placeholder="+90 555 123 45 67"
+                />
+                {touched.phone && errors.phone && (
+                  <p className="mt-1 text-red-500 text-sm">{errors.phone}</p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="address"
+                  className="block font-body font-medium text-neutral-dark mb-2"
+                >
+                  Adres <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="address"
+                  name="address"
+                  aria-required="true"
+                  rows={1}
+                  value={formData.address}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  style={{ minHeight: "42px", overflowY: "hidden" }}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                    touched.address && errors.address
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                  }`}
+                  placeholder="Sokak, Mahalle, Bina ve Daire No, İlçe / İzmir"
+                />
+                {touched.address && errors.address && (
+                  <p className="mt-1 text-red-500 text-sm">{errors.address}</p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block font-body font-medium text-neutral-dark mb-2"
+                >
+                  Mesajınız <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  aria-required="true"
+                  rows={2}
+                  value={formData.message}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  style={{ minHeight: "84px", overflowY: "hidden" }}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
+                    touched.message && errors.message
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                  }`}
+                  placeholder="Bize çocuğunuzun ve sizin ihtiyaçlarınızı kısaca anlatmak ister misiniz? Böylece size en iyi şekilde destek olabiliriz 💚"
+                />
+                {touched.message && errors.message && (
+                  <p className="mt-1 text-red-500 text-sm">{errors.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                {/* KVKK Section with Accordion */}
+                <div className="bg-gray-50 rounded-xl overflow-hidden">
+                  <div
+                    onClick={handleKvkkHeaderClick}
+                    className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                  >
+                    <div className="flex items-start space-x-3">
+                      <div className="flex items-center h-5 mt-1">
+                        <input
+                          id="kvkk"
+                          name="kvkk"
+                          type="checkbox"
+                          checked={kvkkApproved}
+                          onChange={(e) => {
+                            setKvkkApproved(e.target.checked);
+                            if (e.target.checked) {
+                              setKvkkError("");
+                            }
+                          }}
+                          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                      </div>
+                      <div className="flex-initial">
+                        <label
+                          htmlFor="kvkk"
+                          className="font-body text-sm text-gray-600"
+                        >
+                          Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
+                          okudum ve onaylıyorum.{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <svg
+                      className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                        isKvkkOpen ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Collapsible Content */}
+                  <div
+                    className={`transition-all duration-300 ease-in-out ${
+                      isKvkkOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    } overflow-hidden`}
+                  >
+                    <div className="p-4 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
+                      <p className="mb-2">İlgili kanun ve yönetmelikler:</p>
+                      <ul className="list-disc pl-5 space-y-2 mb-2">
+                        <li>
+                          <a
+                            href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            KVKK
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=24038&MevzuatTur=7&MevzuatTertip=5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            Veri İşleme Yönetmeliği
+                          </a>
+                        </li>
+                      </ul>
+                      <p>
+                        Kişisel verileriniz hizmet sunumu ve yasal yükümlülükler
+                        kapsamında işlenmekte olup, üçüncü şahıslarla
+                        paylaşılmamaktadır.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {kvkkError && (
+                  <p className="text-red-500 text-sm">{kvkkError}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary text-white py-4 rounded-xl font-body font-semibold hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
+              >
+                Mesaj Gönder
+              </button>
+            </form>
+          </div>
+
+          {/* Contact Information & Social Media */}
           <div className="flex justify-center">
             <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 w-full max-w-2xl">
-              <h3 className="font-display text-2xl font-bold text-white mb-6">İletişim Bilgileri</h3>
+              <h3 className="font-display text-2xl font-bold text-white mb-6">
+                İletişim Bilgileri
+              </h3>
               <div className="space-y-6 mb-8">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-body font-semibold text-white mb-1">E-posta</h4>
-                    <p className="font-body text-white/80">arkadasozelegitim@hotmail.com</p>
+                    <h4 className="font-body font-semibold text-white mb-1">
+                      E-posta
+                    </h4>
+                    <p className="font-body text-white/80">
+                      arkadasozelegitim@hotmail.com
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-body font-semibold text-white mb-1">Telefon</h4>
-                    <p className="font-body text-white/80">+90 506 810 33 21</p>
-                  </div>
-                </div>
-                {/* Diğer iletişim ve sosyal medya alanları buraya eklenebilir */}
-              </div>
-              {/* Harita */}
-              <div className="rounded-xl overflow-hidden shadow-lg">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.857964893978!2d27.13839331562209!3d38.41924897964609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDI1JzA5LjMiTiAyN8KwMDgnMjguMCJF!5e0!3m2!1str!2str!4v1680000000000!5m2!1str!2str"
-                  width="100%"
-                  height="250"
-                  style={{ border: 0 }}
-                  allowFullScreen={true}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Arkadaş Özel Eğitim Merkezi Konumu"
-                ></iframe>
-              </div>
-              {/* Çalışma Saatleri */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 md:col-span-2 mt-8">
-                <h3 className="font-display text-2xl font-bold text-white mb-6">Çalışma Saatleri</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="font-body text-white/80">Pazartesi - Cuma</span>
-                    <span className="font-body font-semibold text-white">09:00 - 18:00</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-body text-white/80">Cumartesi</span>
-                    <span className="font-body font-semibold text-white">09:00 - 16:00</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-body text-white/80">Pazar</span>
-                    <span className="font-body font-semibold text-white">Kapalı</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
