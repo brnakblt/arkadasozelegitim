@@ -1,95 +1,101 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 
 const Team: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState("Tümü");
+  interface TeamMember {
+    id: number; // Strapi'den gelen her öğenin bir ID'si olur
+    name: string;
+    title: string;
+    category: string[]; // Strapi'den JSON olarak gelecek
+    image: { url: string; alternativeText?: string }; // Strapi Media yapısı
+    specialization: string;
+    description: string;
+    objectPosition?: string;
+  }
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const categories = [
-    "Yönetim",
-    "Eğitim Danışmanı",
-    "Psikolog",
-    "Dil ve Konuşma Terapisti",
-    "Öğretmen",
-    "Fizyoterapist",
-    "Halkla İlişkiler",
-    "Şoför",
-    "Temizlik Personeli",
-  ];
+  const STRAPI_URL = "http://localhost:1337"; // Strapi sunucunuzun adresi
 
-  const teamMembers = [
-    {
-      name: "Psk. Halil Çetinkaya",
-      title: "Merkez Müdürü",
-      category: ["Yönetim"],
-      image: "/images/Profil Fotoğrafları/halilcetinkaya.webp",
-      specialization: "Çocuk Gelişimi ve Eğitimi Uzmanı",
-      description: "20 yıllık deneyim",
-      objectPosition: "center",
-    },
-    {
-      name: "Prof. Yusuf Ziya Tavil",
-      title: "Özel Eğitim Uzmanı",
-      category: ["Eğitim Danışmanı"],
-      image: "/images/Profil Fotoğrafları/yusufziyatavil.webp",
-      specialization: "Davranış ve Gelişim Uzmanı",
-      description: "15 yıllık deneyim",
-      objectPosition: "50% 30%", // Yatayda ortalı, dikeyde %30 (biraz yukarı)
-    },
-    {
-      name: "Psk. Damla Mercan",
-      title: "Psikolog",
-      category: ["Psikolog"],
-      image: "/images/Profil Fotoğrafları/damlamercan.webp",
-      specialization: "Çocuk ve Ergen Psikolojisi",
-      description: "10 yıllık deneyim",
-      objectPosition: "center",
-    },
-    {
-      name: "Ahmet Sait Kurt",
-      title: "Dil ve Konuşma Terapisti",
-      category: ["Dil Ve Konuşma Terapisti"],
-      image: "/images/Profil Fotoğrafları/ahmetsaitkurt.webp",
-      specialization: "Dil ve Konuşma Bozuklukları",
-      description: "5 yıllık deneyim",
-      objectPosition: "center",
-    },
-    {
-      name: "Ömür Mutlu",
-      title: "Fizyoterapist",
-      category: ["Fizyoterapist"],
-      image: "/images/Profil Fotoğrafları/omurmutlu.webp",
-      specialization: "Pediatrik Fizyoterapi",
-      description: "7 yıllık deneyim",
-      objectPosition: "center",
-    },
-    {
-      name: "Psk. Gaye Nur Yıldız",
-      title: "Aile Danışmanı",
-      category: ["Danışmanlar", "Psikolog"],
-      image: "/images/4.webp", // Bu resim yolu güncellenecek
-      specialization: "Aile ve Çocuk Psikolojisi",
-      description: "12 yıllık deneyim",
-      objectPosition: "center",
-    },
-    {
-      name: "Ali Can",
-      title: "Özel Eğitim Öğretmeni",
-      category: ["Özel Eğitim Alanı Öğretmeni"],
-      image: "/images/5.webp", // Bu resim yolu güncellenecek
-      specialization: "Özel Gereksinimli Çocuklar Eğitimi",
-      description: "8 yıllık deneyim",
-      objectPosition: "center",
-    },
-  ];
+  const fetchTeamMembers = useCallback(async () => {
+    const defaultCategories = [
+      "Yönetim",
+      "Eğitim Danışmanı",
+      "Psikolog",
+      "Danışmanlar",
+      "Dil ve Konuşma Terapisti",
+      "Öğretmen",
+      "Fizyoterapist",
+    ];
+    try {
+      setLoading(true);
+      const response = await fetch(`${STRAPI_URL}/api/team-members?populate=image&sort=order:asc`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
 
-  const filteredMembers = useMemo(
-    () =>
-      activeCategory === "Tümü"
-        ? teamMembers.slice(0, 8)
-        : teamMembers.filter((member) =>
-            member.category.includes(activeCategory)
-          ),
-    [activeCategory, teamMembers]
-  );
+      const formattedMembers: TeamMember[] = data.data.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        title: item.title,
+        category: item.category || [],
+        image: {
+          url: item.image?.url
+            ? `${STRAPI_URL}${item.image.url}`
+            : "/images/placeholder.webp",
+          alternativeText: item.image?.alternativeText || item.name,
+        },
+        specialization: item.specialization,
+        description: item.description,
+        objectPosition: item.objectPosition || "center",
+      }));
+      setTeamMembers(formattedMembers);
+
+      const uniqueCategories = [
+        ...new Set(formattedMembers.flatMap((member) => member.category)),
+      ];
+      // Remove "Tümü" and ensure categories are unique and valid
+      setCategories([...defaultCategories, ...uniqueCategories].filter((value, index, self) => self.indexOf(value) === index && value));
+    } catch (err) {
+      console.error("Failed to fetch team members:", err);
+      setError("Ekip üyeleri yüklenirken bir hata oluştu.");
+    } finally {
+      setLoading(false);
+    }
+  }, [STRAPI_URL]);
+
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchTeamMembers();
+  }, [fetchTeamMembers]);
+
+  const filteredMembers = useMemo(() => {
+    if (!activeCategory) {
+      return teamMembers.slice(0, 8);
+    }
+    return teamMembers.filter(
+      (member) => member.category && member.category.includes(activeCategory)
+    );
+  }, [activeCategory, teamMembers]);
+
+  if (loading) {
+    return (
+      <section id="team" className="py-20 bg-gray-50 text-center">
+        <p className="font-body text-lg text-neutral-dark/80">Yükleniyor...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="team" className="py-20 bg-gray-50 text-center text-red-600">
+        <p className="font-body text-lg">{error}</p>
+      </section>
+    );
+  }
 
   return (
     <section id="team" className="py-20 bg-gray-50">
@@ -130,14 +136,14 @@ const Team: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredMembers.map((member) => (
             <div
-              key={member.name}
+              key={member.id}
               className="group relative overflow-hidden bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
             >
               <div className="relative z-20">
-                <div className="w-56 h-56 mx-auto mb-6">
+                <div className="w-56 h-56 mx-auto mb-6 rounded-2xl overflow-hidden">
                   <img
-                    src={member.image}
-                    alt={member.name}
+                    src={member.image.url}
+                    alt={member.image.alternativeText || member.name}
                     loading="lazy"
                     className="w-full h-full object-cover rounded-2xl"
                     style={{
