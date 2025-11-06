@@ -631,9 +631,9 @@ const Contact: React.FC = () => {
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3122.942575822693!2d27.07256017640704!3d38.488966970699344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14bbd0a8c91f1c0b%3A0xaa627e94f9f1781d!2sÖzel%20Arkadaş%20Özel%20Eğitim%20ve%20Rehabilitasyon%20Merkezi!5e0!3m2!1str!2str!4v1761179555667!5m2!1str!2str"
                     width="300"
                     height="300"
-                    allowfullscreen=""
+                    allowFullScreen
                     loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
+                    referrerPolicy="no-referrer-when-downgrade"
                   ></iframe>
 
                   {/* Short link to open in Maps app or full Google Maps */}

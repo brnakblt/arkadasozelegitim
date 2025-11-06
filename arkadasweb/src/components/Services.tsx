@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   faUsers,
   faComments,
@@ -8,7 +9,7 @@ import {
 import Modal from "./Modal";
 
 interface Service {
-  icon: React.ElementType;
+  icon: IconProp;
   title: string;
   description: string;
   features: string[];

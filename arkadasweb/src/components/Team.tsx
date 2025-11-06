@@ -2,15 +2,26 @@ import React, { useState, useMemo, useEffect, useCallback } from "react";
 
 const Team: React.FC = () => {
   interface TeamMember {
-    id: number; // Strapi'den gelen her öğenin bir ID'si olur
-    name: string;
-    title: string;
-    category: string[]; // Strapi'den JSON olarak gelecek
-    image: { url: string; alternativeText?: string }; // Strapi Media yapısı
-    specialization: string;
-    description: string;
-    objectPosition?: string;
+    id: number;
+    attributes: {
+      name: string;
+      title: string;
+      category: string[];
+      image: {
+        data: {
+          attributes: {
+            url: string;
+            alternativeText?: string;
+          };
+        };
+      };
+      specialization: string;
+      description: string;
+      objectPosition?: string;
+      order: number;
+    };
   }
+
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,34 +40,41 @@ const Team: React.FC = () => {
     ];
     try {
       setLoading(true);
-      const response = await fetch(`${STRAPI_URL}/api/team-members?populate=image&sort=order:asc`);
+      const response = await fetch(
+        `${STRAPI_URL}/api/team-members?populate=image&sort=order:asc`
+      );
       if (!response.ok) {
+        const errorBody = await response.text();
+        console.error("HTTP error! status:", response.status, "body:", errorBody);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
 
-      const formattedMembers: TeamMember[] = data.data.map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        title: item.title,
-        category: item.category || [],
-        image: {
-          url: item.image?.url
-            ? `${STRAPI_URL}${item.image.url}`
-            : "/images/placeholder.webp",
-          alternativeText: item.image?.alternativeText || item.name,
-        },
-        specialization: item.specialization,
-        description: item.description,
-        objectPosition: item.objectPosition || "center",
-      }));
+      const formattedMembers: TeamMember[] = data.data.map((member: any) => {
+        const category = member.attributes.category || [];
+
+        return {
+          ...member,
+          attributes: {
+            ...member.attributes,
+            category: category,
+          },
+        };
+      });
+
       setTeamMembers(formattedMembers);
 
       const uniqueCategories = [
-        ...new Set(formattedMembers.flatMap((member) => member.category)),
+        ...new Set(
+          formattedMembers.flatMap((member) => member.attributes.category)
+        ),
       ];
       // Remove "Tümü" and ensure categories are unique and valid
-      setCategories([...defaultCategories, ...uniqueCategories].filter((value, index, self) => self.indexOf(value) === index && value));
+      setCategories(
+        [...defaultCategories, ...uniqueCategories].filter(
+          (value, index, self) => self.indexOf(value) === index && value
+        )
+      );
     } catch (err) {
       console.error("Failed to fetch team members:", err);
       setError("Ekip üyeleri yüklenirken bir hata oluştu.");
@@ -77,7 +95,9 @@ const Team: React.FC = () => {
       return teamMembers.slice(0, 8);
     }
     return teamMembers.filter(
-      (member) => member.category && member.category.includes(activeCategory)
+      (member) =>
+        member.attributes.category &&
+        member.attributes.category.includes(activeCategory)
     );
   }, [activeCategory, teamMembers]);
 
@@ -142,28 +162,36 @@ const Team: React.FC = () => {
               <div className="relative z-20">
                 <div className="w-56 h-56 mx-auto mb-6 rounded-2xl overflow-hidden">
                   <img
-                    src={member.image.url}
-                    alt={member.image.alternativeText || member.name}
+                    src={
+                      member.attributes.image?.data?.attributes?.url
+                        ? `${STRAPI_URL}${member.attributes.image.data.attributes.url}`
+                        : "/images/placeholder.webp"
+                    }
+                    alt={
+                      member.attributes.image?.data?.attributes
+                        ?.alternativeText || member.attributes.name
+                    }
                     loading="lazy"
                     className="w-full h-full object-cover rounded-2xl"
                     style={{
-                      objectPosition: member.objectPosition || "center",
+                      objectPosition:
+                        member.attributes.objectPosition || "center",
                     }}
                   />
                 </div>
 
                 <div className="text-center">
                   <h3 className="font-display text-xl font-bold text-neutral-dark mb-2">
-                    {member.name}
+                    {member.attributes.name}
                   </h3>
                   <p className="text-primary font-body font-medium text-sm mb-2">
-                    {member.title}
+                    {member.attributes.title}
                   </p>
                   <p className="text-neutral-dark/70 font-body text-sm mb-2">
-                    {member.specialization}
+                    {member.attributes.specialization}
                   </p>
                   <p className="text-neutral-dark/60 font-body text-xs">
-                    {member.description}
+                    {member.attributes.description}
                   </p>
 
                   {/* Social Links */}

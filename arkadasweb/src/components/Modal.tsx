@@ -1,7 +1,8 @@
 import React from 'react';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 interface Service {
-  icon: React.ElementType;
+  icon: IconProp;
   title: string;
   description: string;
   features: string[];
