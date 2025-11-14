@@ -1,14 +1,15 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import Header from "./src/components/Header";
 import Hero from "./src/components/Hero";
-import About from "./src/components/About";
-import Team from "./src/components/Team";
-import Services from "./src/components/Services";
-import Process from "./src/components/Process";
-import Gallery from "./src/components/Gallery";
-import FAQ from "./src/components/FAQ";
-import Contact from "./src/components/Contact";
-import Footer from "./src/components/Footer";
+
+const About = lazy(() => import("./src/components/About"));
+const Team = lazy(() => import("./src/components/Team"));
+const Services = lazy(() => import("./src/components/Services"));
+const Process = lazy(() => import("./src/components/Process"));
+const Gallery = lazy(() => import("./src/components/Gallery"));
+const FAQ = lazy(() => import("./src/components/FAQ"));
+const Contact = lazy(() => import("./src/components/Contact"));
+const Footer = lazy(() => import("./src/components/Footer"));
 
 const App: React.FC = () => {
   return (
@@ -21,15 +22,19 @@ const App: React.FC = () => {
       <Header />
       <main id="main-content" role="main" className="pt-16">
         <Hero />
-        <About />
-        <Team />
-        <Services />
-        <Process />
-        <Gallery />
-        <FAQ />
-        <Contact />
+        <Suspense fallback={<div>Yükleniyor...</div>}>
+          <About />
+          <Team />
+          <Services />
+          <Process />
+          <Gallery />
+          <FAQ />
+          <Contact />
+        </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={<div></div>}>
+        <Footer />
+      </Suspense>
     </div>
   );
 };
