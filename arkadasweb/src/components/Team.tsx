@@ -3,23 +3,23 @@ import React, { useState, useMemo, useEffect, useCallback } from "react";
 const Team: React.FC = () => {
   interface TeamMember {
     id: number;
-    attributes: {
-      name: string;
-      title: string;
-      category: string[];
-      image: {
-        data: {
-          attributes: {
-            url: string;
-            alternativeText?: string;
-          };
-        };
-      };
-      specialization: string;
-      description: string;
-      objectPosition?: string;
-      order: number;
+    name: string;
+    title: string;
+    category: string[];
+    image: {
+      url: string;
+      alternativeText?: string;
+      formats: {
+        thumbnail: { url: string };
+        medium: { url: string };
+        small: { url: string };
+        large: { url: string };
+      }
     };
+    specialization: string;
+    description: string;
+    objectPosition?: string;
+    order: number;
   }
 
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
@@ -27,6 +27,16 @@ const Team: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const STRAPI_URL = "http://localhost:1337"; // Strapi sunucunuzun adresi
+
+  const sanitizeUrl = (url: string) => {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    if (url.startsWith("/")) {
+        return url;
+    }
+    return "";
+  };
 
   const fetchTeamMembers = useCallback(async () => {
     const defaultCategories = [
@@ -51,22 +61,14 @@ const Team: React.FC = () => {
       const data = await response.json();
 
       const formattedMembers: TeamMember[] = data.data.map((member: any) => {
-        const category = member.attributes.category || [];
-
-        return {
-          ...member,
-          attributes: {
-            ...member.attributes,
-            category: category,
-          },
-        };
+        return member;
       });
 
       setTeamMembers(formattedMembers);
 
       const uniqueCategories = [
         ...new Set(
-          formattedMembers.flatMap((member) => member.attributes.category)
+          formattedMembers.flatMap((member) => member.category)
         ),
       ];
       // Remove "Tümü" and ensure categories are unique and valid
@@ -76,8 +78,14 @@ const Team: React.FC = () => {
         )
       );
     } catch (err) {
-      console.error("Failed to fetch team members:", err);
-      setError("Ekip üyeleri yüklenirken bir hata oluştu.");
+      console.error("Failed to fetch team members:", {
+        message: err.message,
+        stack: err.stack,
+        error: err,
+      });
+      setError(
+        `Ekip üyeleri yüklenirken bir hata oluştu. (Detaylar için konsola bakın)`
+      );
     } finally {
       setLoading(false);
     }
@@ -96,8 +104,8 @@ const Team: React.FC = () => {
     }
     return teamMembers.filter(
       (member) =>
-        member.attributes.category &&
-        member.attributes.category.includes(activeCategory)
+        member.category &&
+        member.category.includes(activeCategory)
     );
   }, [activeCategory, teamMembers]);
 
@@ -163,35 +171,34 @@ const Team: React.FC = () => {
                 <div className="w-56 h-56 mx-auto mb-6 rounded-2xl overflow-hidden">
                   <img
                     src={
-                      member.attributes.image?.data?.attributes?.url
-                        ? `${STRAPI_URL}${member.attributes.image.data.attributes.url}`
+                      member.image?.url
+                        ? sanitizeUrl(`${STRAPI_URL}${member.image.url}`)
                         : "/images/placeholder.webp"
                     }
                     alt={
-                      member.attributes.image?.data?.attributes
-                        ?.alternativeText || member.attributes.name
+                      member.image?.alternativeText || member.name
                     }
                     loading="lazy"
                     className="w-full h-full object-cover rounded-2xl"
                     style={{
                       objectPosition:
-                        member.attributes.objectPosition || "center",
+                        member.objectPosition || "center",
                     }}
                   />
                 </div>
 
                 <div className="text-center">
                   <h3 className="font-display text-xl font-bold text-neutral-dark mb-2">
-                    {member.attributes.name}
+                    {member.name}
                   </h3>
                   <p className="text-primary font-body font-medium text-sm mb-2">
-                    {member.attributes.title}
+                    {member.category[0]}
                   </p>
                   <p className="text-neutral-dark/70 font-body text-sm mb-2">
-                    {member.attributes.specialization}
+                    {member.specialization}
                   </p>
                   <p className="text-neutral-dark/60 font-body text-xs">
-                    {member.attributes.description}
+                    {member.description}
                   </p>
 
                   {/* Social Links */}

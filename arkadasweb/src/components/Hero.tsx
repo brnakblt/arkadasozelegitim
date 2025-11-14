@@ -1,16 +1,53 @@
 import React, { useState, useEffect } from "react";
 
-const images = [
-  "/images/1.webp",
-  "/images/2.webp",
-  "/images/3.webp",
-  "/images/4.webp",
-  "/images/5.webp",
-  "/images/6.webp",
-];
+const STRAPI_URL = "http://localhost:1337";
 
 const Hero: React.FC = () => {
+  const [images, setImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const sanitizeUrl = (url: string) => {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    if (url.startsWith("/")) {
+        return url;
+    }
+    return "";
+  };
+
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      try {
+        const imageNames = ["1.webp", "2.webp", "3.webp", "4.webp", "5.webp", "6.webp"];
+        const query = imageNames.map((name, index) => `filters[name][$in][${index}]=${name}`).join('&');
+        const response = await fetch(`${STRAPI_URL}/api/upload/files?${query}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch hero images');
+        }
+        const data = await response.json();
+        const uniqueImages = imageNames.map(name => {
+          return data.find((image: any) => image.name === name);
+        }).filter(Boolean); // filter out any undefined values
+
+        const imageUrls = uniqueImages.map((image: any) => sanitizeUrl(`${STRAPI_URL}${image.url}`));
+        setImages(imageUrls);
+      } catch (error) {
+        console.error("Error fetching hero images:", error);
+        // Fallback to local images if fetching fails
+        setImages([
+          "/images/1.webp",
+          "/images/2.webp",
+          "/images/3.webp",
+          "/images/4.webp",
+          "/images/5.webp",
+          "/images/6.webp",
+        ]);
+      }
+    };
+
+    fetchHeroImages();
+  }, []);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -25,9 +62,19 @@ const Hero: React.FC = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(nextImage, 5000);
-    return () => clearInterval(interval);
-  }, [currentImageIndex]);
+    if (images.length > 0) {
+      const interval = setInterval(nextImage, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [currentImageIndex, images]);
+
+  if (images.length === 0) {
+    return (
+      <section id="home" className="relative min-h-screen flex items-center justify-center">
+        <div>Yükleniyor...</div>
+      </section>
+    );
+  }
 
   return (
     <section

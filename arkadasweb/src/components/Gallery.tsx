@@ -1,54 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+const STRAPI_URL = "http://localhost:1337";
+
+interface InstagramPost {
+  id: string;
+  media_url: string;
+  caption: string;
+  permalink: string;
+}
 
 const Gallery: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [posts, setPosts] = useState<InstagramPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const images = [
-    {
-      src: "/images/1.webp",
-      alt: "Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi - Uzman eğitmenler ile bireysel çalışmalar",
-      title: "Bireysel Çalışmalar",
-      category: "Eğitim",
-    },
-    {
-      src: "/images/2.webp",
-      alt: "Arkadaş Özel Eğitim Merkezi - Modern özel eğitim sınıfları, çocuklar öğreniyor, destekleyici eğitim ortamı",
-      title: "Özel Eğitim Sınıfları",
-      category: "Eğitim",
-    },
-    {
-      src: "/images/3.webp",
-      alt: "Arkadaş Özel Eğitim Merkezi - Eğitici aktiviteler, renkli öğrenme materyalleri, interaktif öğrenme",
-      title: "Eğitici Aktiviteler",
-      category: "Sosyal Aktivite",
-    },
-    {
-      src: "/images/4.webp",
-      alt: "Arkadaş Özel Eğitim Merkezi - Bireyselleştirilmiş eğitim çalışmaları",
-      title: "Bireysel Eğitim",
-      category: "Eğitim",
-    },
-    {
-      src: "/images/5.webp",
-      alt: "Arkadaş Özel Eğitim Merkezi - Grup çalışmaları, sosyal beceri geliştirme, çocuklar birlikte öğreniyor",
-      title: "Grup Çalışmaları",
-      category: "Sosyal Aktivite",
-    },
-    {
-      src: "/images/6.webp",
-      alt: "Arkadaş Özel Eğitim Merkezi - Aile danışmanlığı ve rehberlik hizmetleri",
-      title: "Aile Danışmanlığı",
-      category: "Danışmanlık",
-    },
-  ];
+  const sanitizeUrl = (url: string) => {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    return "";
+  };
 
-  const categories = ["Hepsi", "Eğitim", "Sosyal Aktivite", "Danışmanlık"];
-  const [activeCategory, setActiveCategory] = useState("Hepsi");
+  useEffect(() => {
+    const fetchInstagramFeed = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${STRAPI_URL}/api/instagram-feed`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch Instagram feed');
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (err) {
+        console.error("Failed to fetch Instagram feed:", err);
+        setError("Instagram akışı yüklenirken bir hata oluştu.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const filteredImages =
-    activeCategory === "Hepsi"
-      ? images
-      : images.filter((img) => img.category === activeCategory);
+    fetchInstagramFeed();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="gallery" className="py-20 bg-white text-center">
+        <p className="font-body text-lg text-neutral-dark/80">Yükleniyor...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="gallery" className="py-20 bg-white text-center text-red-600">
+        <p className="font-body text-lg">{error}</p>
+      </section>
+    );
+  }
 
   return (
     <section id="gallery" className="py-20 bg-white relative overflow-hidden">
@@ -59,44 +68,28 @@ const Gallery: React.FC = () => {
             Galeri
           </span>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-dark mt-4 mb-6">
-            Merkezimizden
-            <span className="text-gradient block">Kareler</span>
+            Instagram
+            <span className="text-gradient block">Akışımız</span>
           </h2>
           <p className="font-body text-lg text-neutral-dark/80 max-w-3xl mx-auto leading-relaxed">
-            Özel eğitim ve rehabilitasyon merkezimizde gerçekleştirdiğimiz
-            çalışmalardan ve mutlu anlardan kareler.
+            En son gönderilerimize göz atın ve bizi Instagram'da takip edin.
           </p>
-        </div>
-
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-6 py-3 rounded-full font-body font-medium transition-all duration-300 ${
-                activeCategory === category
-                  ? "bg-primary text-white shadow-lg"
-                  : "bg-gray-100 text-neutral-dark hover:bg-gray-200"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
         </div>
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredImages.map((image) => (
-            <div
-              key={image.src}
+          {posts.map((post) => (
+            <a
+              key={post.id}
+              href={sanitizeUrl(post.permalink)}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group relative overflow-hidden rounded-3xl cursor-pointer transform transition-all duration-500 hover:scale-105"
-              onClick={() => setSelectedImage(image.src)}
             >
               <div className="aspect-w-4 aspect-h-3">
                 <img
-                  src={image.src}
-                  alt={image.alt}
+                  src={sanitizeUrl(post.media_url)}
+                  alt={post.caption}
                   loading="lazy"
                   className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   style={{ width: "100%", height: "256px" }}
@@ -106,38 +99,10 @@ const Gallery: React.FC = () => {
               {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <div className="text-xs font-body font-medium text-secondary mb-2 uppercase tracking-wider">
-                    {image.category}
-                  </div>
-                  <h3 className="font-display text-lg font-bold mb-2">
-                    {image.title}
-                  </h3>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-body">Detayları Görün</span>
-                    <svg
-                      className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
+                  <p className="font-body text-sm clamp-3">{post.caption}</p>
                 </div>
               </div>
-
-              {/* Category Badge */}
-              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center justify-center">
-                <span className="text-xs font-body font-medium text-neutral-dark">
-                  {image.category}
-                </span>
-              </div>
-            </div>
+            </a>
           ))}
         </div>
 
