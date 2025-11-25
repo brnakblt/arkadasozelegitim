@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState } from "react";
+import Image from "next/image";
 
 const Gallery: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -93,13 +96,13 @@ const Gallery: React.FC = () => {
               className="group relative overflow-hidden rounded-3xl cursor-pointer transform transition-all duration-500 hover:scale-105"
               onClick={() => setSelectedImage(image.src)}
             >
-              <div className="aspect-w-4 aspect-h-3">
-                <img
+              <div className="relative w-full h-64">
+                <Image
                   src={image.src}
                   alt={image.alt}
-                  loading="lazy"
-                  className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
-                  style={{ width: "100%", height: "256px" }}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
 

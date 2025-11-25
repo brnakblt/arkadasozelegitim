@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef, useLayoutEffect, createRef, useCallback } from "react";
 
 const Process: React.FC = () => {
@@ -49,7 +51,7 @@ const Process: React.FC = () => {
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
   const [points, setPoints] = useState<Array<{ x: number; y: number }>>([]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const stepRefs = useRef<React.RefObject<HTMLDivElement>[]>(steps.map(() => createRef()));
+  const stepRefs = useRef(steps.map(() => createRef<HTMLDivElement>()));
 
   const debounce = <F extends (...args: any[]) => any>(func: F, waitFor: number) => {
     let timeout: ReturnType<typeof setTimeout> | null = null;

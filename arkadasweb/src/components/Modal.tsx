@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 

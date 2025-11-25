@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,11 +76,15 @@ const Header: React.FC = () => {
           }}
           className="flex items-center"
         >
-          <img
-            className="h-12 lg:h-16 w-auto"
-            src="/images/logo.svg"
-            alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi"
-          />
+          <div className="relative h-12 lg:h-16 w-auto aspect-[3/1]">
+            <Image
+              src="/images/logo.svg"
+              alt="Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
 
         </a>
       </div>

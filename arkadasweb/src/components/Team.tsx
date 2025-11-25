@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState, useMemo, useEffect, useCallback } from "react";
+import Image from "next/image";
 
 const Team: React.FC = () => {
   interface TeamMember {
@@ -161,7 +164,7 @@ const Team: React.FC = () => {
             >
               <div className="relative z-20">
                 <div className="w-56 h-56 mx-auto mb-6 rounded-2xl overflow-hidden">
-                  <img
+                  <Image
                     src={
                       member.attributes.image?.data?.attributes?.url
                         ? `${STRAPI_URL}${member.attributes.image.data.attributes.url}`
@@ -171,12 +174,13 @@ const Team: React.FC = () => {
                       member.attributes.image?.data?.attributes
                         ?.alternativeText || member.attributes.name
                     }
-                    loading="lazy"
-                    className="w-full h-full object-cover rounded-2xl"
+                    fill
+                    className="object-cover rounded-2xl"
                     style={{
                       objectPosition:
                         member.attributes.objectPosition || "center",
                     }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
                 </div>
 
