@@ -7,6 +7,7 @@
     "concurrently": "^9.2.1"
   },
   "scripts": {
+    "build:all": "concurrently \"npm run build --prefix arkadasstrapi\" \"npm run build --prefix arkadasweb\"",
     "dev:all": "concurrently \"npm run develop --prefix arkadasstrapi\" \"npm run dev --prefix arkadasweb\"",
     "start:all": "concurrently \"npm run start --prefix arkadasstrapi\" \"npm run start --prefix arkadasweb\"",
     "stop:all": "fuser -k 3000/tcp 1337/tcp"

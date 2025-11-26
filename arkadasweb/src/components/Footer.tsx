@@ -107,6 +107,7 @@ const Footer: React.FC = () => {
                   { name: "Sürecimiz", id: "process" },
                   { name: "Galeri", id: "gallery" },
                   { name: "İletişim", id: "contact" },
+                  { name: "SSS", id: "faq" },
                 ].map((link) => (
                   <li key={link.id}>
                     <button
@@ -144,9 +145,8 @@ const Footer: React.FC = () => {
           href="https://wa.me/905068103321"
           target="_blank"
           rel="noopener noreferrer"
-          className={`w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:bg-[#20bd5a] transition-all duration-300 transform hover:scale-110 ${
-            !showBackToTop ? "mb-0" : "mb-4"
-          }`}
+          className={`w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:bg-[#20bd5a] transition-all duration-300 transform hover:scale-110 ${!showBackToTop ? "mb-0" : "mb-4"
+            }`}
           aria-label="WhatsApp ile iletişime geç"
         >
           <svg

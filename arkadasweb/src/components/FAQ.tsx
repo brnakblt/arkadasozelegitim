@@ -84,9 +84,6 @@ const FAQ: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-primary font-body font-semibold text-sm uppercase tracking-wider">
-            Sıkça Sorulan Sorular
-          </span>
           <h2
             id="faq-heading"
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-dark mt-4 mb-6"
@@ -115,16 +112,14 @@ const FAQ: React.FC = () => {
                   {faq.question}
                 </h3>
                 <div
-                  className={`flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                    openIndexes.includes(index) ? "rotate-180 bg-primary" : ""
-                  }`}
+                  className={`flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center transition-all duration-300 ${openIndexes.includes(index) ? "rotate-180 bg-primary" : ""
+                    }`}
                 >
                   <svg
-                    className={`w-4 h-4 transition-colors duration-300 ${
-                      openIndexes.includes(index)
-                        ? "text-white"
-                        : "text-primary"
-                    }`}
+                    className={`w-4 h-4 transition-colors duration-300 ${openIndexes.includes(index)
+                      ? "text-white"
+                      : "text-primary"
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -140,11 +135,10 @@ const FAQ: React.FC = () => {
               </button>
 
               <div
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                  openIndexes.includes(index)
-                    ? "max-h-96 opacity-100"
-                    : "max-h-0 opacity-0"
-                }`}
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${openIndexes.includes(index)
+                  ? "max-h-96 opacity-100"
+                  : "max-h-0 opacity-0"
+                  }`}
               >
                 <div className="px-8 pb-6">
                   <div className="border-t border-gray-100 pt-6">

@@ -87,9 +87,6 @@ const Services: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-primary font-body font-semibold text-sm uppercase tracking-wider">
-            Hizmetlerimiz
-          </span>
           <h2
             id="services-heading"
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-dark mt-4 mb-6"

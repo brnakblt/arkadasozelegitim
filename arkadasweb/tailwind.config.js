@@ -14,8 +14,8 @@ export default {
         "neutral-light": "#F8F9FA",
       },
       fontFamily: {
-        display: ["Playfair Display", "serif"],
-        body: ["Inter", "sans-serif"],
+        display: ["var(--font-playfair-display)", "serif"],
+        body: ["var(--font-inter)", "sans-serif"],
       },
       boxShadow: {
         card: "0 10px 30px rgba(124, 179, 66, 0.1)",

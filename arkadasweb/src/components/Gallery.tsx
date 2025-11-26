@@ -58,9 +58,6 @@ const Gallery: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-primary font-body font-semibold text-sm uppercase tracking-wider">
-            Galeri
-          </span>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-dark mt-4 mb-6">
             Merkezimizden
             <span className="text-gradient block">Kareler</span>
@@ -77,11 +74,10 @@ const Gallery: React.FC = () => {
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-6 py-3 rounded-full font-body font-medium transition-all duration-300 ${
-                activeCategory === category
+              className={`px-6 py-3 rounded-full font-body font-medium transition-all duration-300 ${activeCategory === category
                   ? "bg-primary text-white shadow-lg"
                   : "bg-gray-100 text-neutral-dark hover:bg-gray-200"
-              }`}
+                }`}
             >
               {category}
             </button>

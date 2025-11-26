@@ -17,19 +17,12 @@ const About: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <div>
-            <div className="mb-6">
-              <span className="text-primary font-body font-semibold text-sm uppercase tracking-wider">
-                Hakkımızda
-              </span>
-            </div>
-
             <h2
               id="about-heading"
-              className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-dark mb-6 leading-tight"
+              className="font-display text-2xl sm:text-3xl lg:text-5xl font-bold text-neutral-dark mb-6 leading-tight"
             >
-              <span className="text-gradient block">Arkadaş</span>
-              <span className="text">Özel Eğitim ve </span>
-              <span className="text">Rehabilitasyon Merkezi</span>
+              <span className="text-gradient block">Arkadaş Özel Eğitim</span>
+              <span className="text">ve Rehabilitasyon Merkezi</span>
             </h2>
 
             <p className="font-body text-lg text-neutral-dark/80 mb-6 leading-relaxed">

@@ -217,9 +217,7 @@ const Contact: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-secondary font-body font-semibold text-sm uppercase tracking-wider">
-            İletişim
-          </span>
+
           <h2
             id="contact-heading"
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-4 mb-6"
@@ -233,13 +231,12 @@ const Contact: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Contact Form */}
           <div className="bg-white rounded-3xl p-8 card-shadow">
             <h3 className="font-display text-2xl font-bold text-neutral-dark mb-6">
               Bize Mesaj Gönderin
             </h3>
-
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
@@ -478,7 +475,7 @@ const Contact: React.FC = () => {
 
           {/* Contact Information & Social Media */}
           <div className="flex justify-center">
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 w-full max-w-2xl">
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 w-full max-w-5xl">
               <h3 className="font-display text-2xl font-bold text-white mb-6">
                 İletişim Bilgileri
               </h3>
@@ -564,7 +561,6 @@ const Contact: React.FC = () => {
                       <br />
                       35600 Çiğli/İzmir
                       <br />
-                      İzmir
                     </p>
                   </div>
                 </div>
@@ -619,43 +615,33 @@ const Contact: React.FC = () => {
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                     </svg>
                   </a>
-                </div>
-                <h3 className="font-display text-2xl font-bold text-white mb-6">
-                  Çalışma Saatleri
-                </h3>
-
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="font-body text-white/80">
-                      Pazartesi - Cuma
-                    </span>
-                    <span className="font-body font-semibold text-white">
-                      09:00 - 18:00
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-body text-white/80">Cumartesi</span>
-                    <span className="font-body font-semibold text-white">
-                      09:00 - 16:00
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-body text-white/80">Pazar</span>
-                    <span className="font-body font-semibold text-white">
-                      Kapalı
-                    </span>
-                  </div>
+                  <a
+                    href="https://www.google.com/maps/place/%C3%96zel+Arkada%C5%9F+%C3%96zel+E%C4%9Fitim+ve+Rehabilitasyon+Merkezi/@38.4890225,27.075917,18.06z/data=!4m6!3m5!1s0x14bbd0a8c91f1c0b:0xaa627e94f9f1781d!8m2!3d38.4889628!4d27.0751351!16s%2Fg%2F1tk09y3y?entry=tts&skid=39c53d1a-fea9-41c4-8d02-9429de1eaf58"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center hover:bg-secondary/90 transition-colors duration-300"
+                    aria-label="Google Maps"
+                  >
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" />
+                    </svg>
+                  </a>
                 </div>
                 {/* Google Maps iframe */}
                 <div className="rounded-2xl overflow-hidden shadow-lg mt-8 relative">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3122.942575822693!2d27.07256017640704!3d38.488966970699344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14bbd0a8c91f1c0b%3A0xaa627e94f9f1781d!2sÖzel%20Arkadaş%20Özel%20Eğitim%20ve%20Rehabilitasyon%20Merkezi!5e0!3m2!1str!2str!4v1761179555667!5m2!1str!2str"
-                    width="300"
-                    height="300"
-                    allowFullScreen
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d38532.36818884902!2d27.103783262601926!3d38.4843215025564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14bbd0a8c91f1c0b%3A0xaa627e94f9f1781d!2s%C3%96zel%20Arkada%C5%9F%20%C3%96zel%20E%C4%9Fitim%20ve%20Rehabilitasyon%20Merkezi!5e0!3m2!1str!2str!4v1764150415003!5m2!1str!2str"
+                    width="600"
+                    height="450"
+                    style={{ border: 0 }}
+                    allowFullScreen={true}
                     loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
+                    referrerPolicy="no-referrer-when-downgrade">
+
+                  </iframe>
 
                   {/* Short link to open in Maps app or full Google Maps */}
                   <div className="mt-3 text-right px-3 pb-3">

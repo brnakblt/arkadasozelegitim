@@ -137,9 +137,6 @@ const Process: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <span className="text-primary font-body font-semibold text-sm uppercase tracking-wider">
-            Sürecimiz
-          </span>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-dark mt-4 mb-6">
             Nasıl
             <span className="text-gradient block">Çalışıyoruz</span>

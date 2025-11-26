@@ -15,7 +15,9 @@ const Header: React.FC = () => {
     { id: "services", label: "Hizmetlerimiz" },
     { id: "process", label: "Sürecimiz" },
     { id: "gallery", label: "Galeri" },
+    { id: "faq", label: "SSS" },
     { id: "contact", label: "İletişim" },
+
   ];
 
   useEffect(() => {
@@ -60,9 +62,8 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[9999] bg-white transition-all duration-300 ${
-        isScrolled ? "shadow-lg" : ""
-      }`}
+      className={`fixed top-0 left-0 right-0 z-[9999] bg-white transition-all duration-300 ${isScrolled ? "shadow-lg" : ""
+        }`}
       role="banner"
     >
       {/* Logo - Absolutely positioned */}
@@ -107,9 +108,8 @@ const Header: React.FC = () => {
               >
                 {item.label}
                 <span
-                  className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform transition-transform duration-300 ease-out ${
-                    activeSection === item.id ? "scale-x-100" : "scale-x-0"
-                  }`}
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 bg-primary transform transition-transform duration-300 ease-out ${activeSection === item.id ? "scale-x-100" : "scale-x-0"
+                    }`}
                 ></span>
               </button>
             ))}
@@ -154,11 +154,10 @@ const Header: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`block w-full text-left px-3 py-2 font-body text-base font-medium transition-colors duration-200 ${
-                    activeSection === item.id
-                      ? "text-primary"
-                      : "text-neutral-dark"
-                  }`}
+                  className={`block w-full text-left px-3 py-2 font-body text-base font-medium transition-colors duration-200 ${activeSection === item.id
+                    ? "text-primary"
+                    : "text-neutral-dark"
+                    }`}
                 >
                   {item.label}
                 </button>
