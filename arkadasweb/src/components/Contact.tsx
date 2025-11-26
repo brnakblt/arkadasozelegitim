@@ -40,14 +40,14 @@ const Contact: React.FC = () => {
         return value.trim() === ""
           ? "E-posta alanı zorunludur"
           : !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)
-          ? "Geçerli bir e-posta adresi giriniz"
-          : "";
+            ? "Geçerli bir e-posta adresi giriniz"
+            : "";
       case "phone":
         return value.trim() === ""
           ? "Telefon numarası zorunludur"
           : !/^[0-9\s()-]+$/.test(value)
-          ? "Geçerli bir telefon numarası giriniz"
-          : "";
+            ? "Geçerli bir telefon numarası giriniz"
+            : "";
       case "address":
         return value.trim() === "" ? "Lütfen bir adres giriniz" : "";
       case "message":
@@ -257,11 +257,10 @@ const Contact: React.FC = () => {
                     value={formData.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                      touched.name && errors.name
-                        ? "border-red-500 focus:border-red-500"
-                        : "border-gray-300 focus:border-transparent"
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.name && errors.name
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                      }`}
                     placeholder="Adınız ve soyadınız"
                   />
                   {touched.name && errors.name && (
@@ -284,11 +283,10 @@ const Contact: React.FC = () => {
                     value={formData.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                      touched.email && errors.email
-                        ? "border-red-500 focus:border-red-500"
-                        : "border-gray-300 focus:border-transparent"
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.email && errors.email
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:border-transparent"
+                      }`}
                     placeholder="ornek@email.com"
                   />
                   {touched.email && errors.email && (
@@ -312,11 +310,10 @@ const Contact: React.FC = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                    touched.phone && errors.phone
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-transparent"
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.phone && errors.phone
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-gray-300 focus:border-transparent"
+                    }`}
                   placeholder="+90 555 123 45 67"
                 />
                 {touched.phone && errors.phone && (
@@ -340,11 +337,10 @@ const Contact: React.FC = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   style={{ minHeight: "42px", overflowY: "hidden" }}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                    touched.address && errors.address
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-transparent"
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.address && errors.address
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-gray-300 focus:border-transparent"
+                    }`}
                   placeholder="Sokak, Mahalle, Bina ve Daire No, İlçe / İzmir"
                 />
                 {touched.address && errors.address && (
@@ -368,11 +364,10 @@ const Contact: React.FC = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   style={{ minHeight: "84px", overflowY: "hidden" }}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${
-                    touched.message && errors.message
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-transparent"
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.message && errors.message
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-gray-300 focus:border-transparent"
+                    }`}
                   placeholder="Bize çocuğunuzun ve sizin ihtiyaçlarınızı kısaca anlatmak ister misiniz? Böylece size en iyi şekilde destek olabiliriz 💚"
                 />
                 {touched.message && errors.message && (
@@ -415,9 +410,8 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
                     <svg
-                      className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
-                        isKvkkOpen ? "rotate-180" : ""
-                      }`}
+                      className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${isKvkkOpen ? "rotate-180" : ""
+                        }`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -433,9 +427,8 @@ const Contact: React.FC = () => {
 
                   {/* Collapsible Content */}
                   <div
-                    className={`transition-all duration-300 ease-in-out ${
-                      isKvkkOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                    } overflow-hidden`}
+                    className={`transition-all duration-300 ease-in-out ${isKvkkOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                      } overflow-hidden`}
                   >
                     <div className="p-4 text-sm text-gray-600 leading-relaxed border-t border-gray-200">
                       <p className="mb-2">İlgili kanun ve yönetmelikler:</p>
@@ -627,6 +620,32 @@ const Contact: React.FC = () => {
                     </svg>
                   </a>
                 </div>
+                <h3 className="font-display text-2xl font-bold text-white mb-6">
+                  Çalışma Saatleri
+                </h3>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-body text-white/80">
+                      Pazartesi - Cuma
+                    </span>
+                    <span className="font-body font-semibold text-white">
+                      09:00 - 18:00
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-body text-white/80">Cumartesi</span>
+                    <span className="font-body font-semibold text-white">
+                      09:00 - 16:00
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-body text-white/80">Pazar</span>
+                    <span className="font-body font-semibold text-white">
+                      Kapalı
+                    </span>
+                  </div>
+                </div>
                 {/* Google Maps iframe */}
                 <div className="rounded-2xl overflow-hidden shadow-lg mt-8 relative">
                   <iframe
@@ -650,36 +669,6 @@ const Contact: React.FC = () => {
                       Haritayı uygulamada aç
                     </a>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Business Hours */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 md:col-span-2">
-              <h3 className="font-display text-2xl font-bold text-white mb-6">
-                Çalışma Saatleri
-              </h3>
-
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-body text-white/80">
-                    Pazartesi - Cuma
-                  </span>
-                  <span className="font-body font-semibold text-white">
-                    09:00 - 18:00
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-body text-white/80">Cumartesi</span>
-                  <span className="font-body font-semibold text-white">
-                    09:00 - 16:00
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-body text-white/80">Pazar</span>
-                  <span className="font-body font-semibold text-white">
-                    Kapalı
-                  </span>
                 </div>
               </div>
             </div>

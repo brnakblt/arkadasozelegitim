@@ -1,2 +1,6 @@
 .env
 node_modules
+assets
+.directory
+arkadasstrapi/.directory
+arkadasweb/.directory
