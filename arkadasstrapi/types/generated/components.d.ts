@@ -40,13 +40,24 @@ export interface SharedSeo extends Schema.Component {
   info: {
     description: '';
     displayName: 'Seo';
-    icon: 'allergies';
-    name: 'Seo';
+    icon: 'search';
   };
   attributes: {
-    metaDescription: Attribute.Text & Attribute.Required;
-    metaTitle: Attribute.String & Attribute.Required;
-    shareImage: Attribute.Media<'images'>;
+    canonicalURL: Attribute.String;
+    keywords: Attribute.Text;
+    metaDescription: Attribute.Text &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
+    metaRobots: Attribute.String;
+    metaTitle: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    shareImage: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    structuredData: Attribute.JSON;
   };
 }
 

@@ -534,7 +534,7 @@ const Contact: React.FC = () => {
                       E-posta
                     </h4>
                     <p className="font-body text-white/80">
-                      arkadasozelegitim@hotmail.com
+                      cigliarkadasozelegitim@gmail.com
                     </p>
                   </div>
                 </div>
@@ -660,7 +660,7 @@ const Contact: React.FC = () => {
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path d="M12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" />
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                     </svg>
                   </a>
                 </div>

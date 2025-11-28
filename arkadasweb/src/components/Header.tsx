@@ -2,11 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import AuthModal from "./AuthModal";
 
 const Header: React.FC = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+
+  const isDashboard = pathname === "/dashboard";
 
   const menuItems = [
     { id: "home", label: "Ana Sayfa" },
@@ -51,6 +59,8 @@ const Header: React.FC = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [menuItems]);
+
+  if (isDashboard) return null;
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -100,7 +110,7 @@ const Header: React.FC = () => {
             role="navigation"
             aria-label="Ana menü"
           >
-            {menuItems.map((item) => (
+            {!isDashboard && menuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
@@ -113,7 +123,21 @@ const Header: React.FC = () => {
                 ></span>
               </button>
             ))}
-
+            {isDashboard ? (
+              <button
+                onClick={() => router.push("/")}
+                className="ml-4 px-5 py-2.5 bg-red-500 text-white font-body text-sm font-medium rounded-full hover:bg-red-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+              >
+                Çıkış Yap
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="ml-4 px-5 py-2.5 bg-primary text-white font-body text-sm font-medium rounded-full hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+              >
+                Giriş Yap
+              </button>
+            )}
           </nav>
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -150,7 +174,7 @@ const Header: React.FC = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {menuItems.map((item) => (
+              {!isDashboard && menuItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
@@ -162,11 +186,32 @@ const Header: React.FC = () => {
                   {item.label}
                 </button>
               ))}
-
+              {isDashboard ? (
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    router.push("/");
+                  }}
+                  className="block w-full text-center mt-4 px-3 py-3 bg-red-500 text-white font-body text-base font-medium rounded-xl hover:bg-red-600 transition-colors duration-200"
+                >
+                  Çıkış Yap
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="block w-full text-center mt-4 px-3 py-3 bg-primary text-white font-body text-base font-medium rounded-xl hover:bg-primary/90 transition-colors duration-200"
+                >
+                  Giriş Yap
+                </button>
+              )}
             </div>
           </div>
         )}
       </div>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </header>
   );
 };

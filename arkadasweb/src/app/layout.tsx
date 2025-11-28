@@ -6,6 +6,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import CookieConsent from '@/components/CookieConsent'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfairDisplay = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair-display' })
@@ -30,6 +31,20 @@ export const metadata: Metadata = {
   icons: {
     icon: '/images/favicon.svg',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://arkadasozelegitim.com',
+  },
 }
 
 export default function RootLayout({
@@ -47,6 +62,7 @@ export default function RootLayout({
         <main id="main-content" role="main">
           {children}
         </main>
+        <CookieConsent />
         <Footer />
       </body>
     </html>

@@ -999,6 +999,8 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 3;
       }>;
+    userType: Attribute.Enumeration<['parent', 'teacher']> &
+      Attribute.DefaultTo<'parent'>;
   };
 }
 
