@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Team: React.FC = () => {
   interface TeamMember {
@@ -22,6 +23,7 @@ const Team: React.FC = () => {
       description: string;
       objectPosition?: string;
       order: number;
+      link?: string;
     };
   }
 
@@ -36,7 +38,6 @@ const Team: React.FC = () => {
       "Yönetim",
       "Eğitim Danışmanı",
       "Psikolog",
-      "Danışmanlar",
       "Dil ve Konuşma Terapisti",
       "Öğretmen",
       "Fizyoterapist",
@@ -136,7 +137,7 @@ const Team: React.FC = () => {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-nowrap overflow-x-auto gap-4 mb-12 py-4">
+        <div className="flex flex-nowrap overflow-x-auto gap-4 mb-12 py-4 justify-center">
           {categories.map((category) => (
             <button
               key={category}
@@ -153,64 +154,66 @@ const Team: React.FC = () => {
 
         {/* Team Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredMembers.map((member) => (
-            <div
-              key={member.id}
-              className="group relative overflow-hidden bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300"
-            >
-              <div className="relative z-20">
-                <div className="w-48 h-48 mx-auto mb-4 rounded-2xl overflow-hidden relative">
-                  <Image
-                    unoptimized
-                    src={
-                      member.attributes.image?.data?.attributes?.url
-                        ? `${STRAPI_URL}${member.attributes.image.data.attributes.url}`
-                        : "/images/placeholder.webp"
-                    }
-                    alt={
-                      member.attributes.image?.data?.attributes
-                        ?.alternativeText || member.attributes.name
-                    }
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover rounded-2xl"
-                    style={{
-                      objectPosition:
-                        member.attributes.objectPosition || "center",
-                    }}
-                  />
+          {filteredMembers.map((member) => {
+            const cardClasses = "group relative overflow-hidden bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col";
+            const CardContent = (
+              <>
+                <div className="relative z-20 h-full flex flex-col">
+                  <div className="w-48 h-48 mx-auto mb-4 rounded-2xl overflow-hidden relative flex-shrink-0">
+                    <Image
+                      unoptimized
+                      src={
+                        member.attributes.image?.data?.attributes?.url
+                          ? `${STRAPI_URL}${member.attributes.image.data.attributes.url}`
+                          : "/images/placeholder.webp"
+                      }
+                      alt={
+                        member.attributes.image?.data?.attributes
+                          ?.alternativeText || member.attributes.name
+                      }
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover rounded-2xl"
+                      style={{
+                        objectPosition:
+                          member.attributes.objectPosition || "center",
+                      }}
+                    />
+                  </div>
+
+                  <div className="text-center px-2 pb-2 flex-shrink-0">
+                    <h3 className="font-display text-lg font-bold text-neutral-dark mb-1">
+                      {member.attributes.name}
+                    </h3>
+
+                    <p className="text-primary font-body font-medium text-sm mb-3">
+                      {member.attributes.title}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="text-center px-2 pb-2">
-                  <h3 className="font-display text-lg font-bold text-neutral-dark mb-1">
-                    {member.attributes.name}
-                  </h3>
+                {/* Gradient Hover Effect - Starts from the card bottom */}
+                <div className="absolute inset-x-0 bottom-0 h-1/6 bg-gradient-to-t from-secondary/60 via-secondary/40 to-secondary/0 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0 z-10 pointer-events-none"></div>
+              </>
+            );
 
-                  <p className="text-primary font-body font-medium text-sm mb-3">
-                    {member.attributes.title}
-                  </p>
-                </div>
-
-                {/* Separator & Bottom Section */}
-                <div className="relative overflow-hidden border-t border-gray-100 pt-4 px-2">
-                  <p className="text-neutral-dark/70 font-body text-sm leading-relaxed mb-4 line-clamp-3 relative z-10 transition-colors duration-300 group-hover:text-neutral-dark">
-                    {member.attributes.description}
-                  </p>
-
-                  {member.attributes.specialization && (
-                    <div className="mt-auto pt-2 relative z-10 transform translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                      <span className="inline-block bg-white/90 text-secondary font-display font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-lg shadow-sm">
-                        {member.attributes.specialization}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Gradient Hover Effect - Constrained to bottom section */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/20 to-transparent transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0 z-0"></div>
-                </div>
+            return member.attributes.link ? (
+              <Link
+                key={member.id}
+                href={member.attributes.link}
+                className={`${cardClasses} cursor-pointer`} // Add cursor-pointer for links
+              >
+                {CardContent}
+              </Link>
+            ) : (
+              <div
+                key={member.id}
+                className={cardClasses}
+              >
+                {CardContent}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

@@ -45,7 +45,7 @@ const Contact: React.FC = () => {
       case "phone":
         return value.trim() === ""
           ? "Telefon numarası zorunludur"
-          : !/^[0-9\s()-]+$/.test(value)
+          : !/^[+]?[0-9\s()-]+$/.test(value)
             ? "Geçerli bir telefon numarası giriniz"
             : "";
       case "address":
@@ -233,28 +233,29 @@ const Contact: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Contact Form */}
-          <div className="bg-white rounded-3xl p-8 card-shadow">
+          <div className="bg-white rounded-3xl px-8 pt-8 pb-0 card-shadow transition-all duration-300 ease-in-out">
             <h3 className="font-display text-2xl font-bold text-neutral-dark mb-6">
               Bize Mesaj Gönderin
             </h3>
-            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label
                     htmlFor="name"
                     className="block font-body font-medium text-neutral-dark mb-2"
                   >
-                    Ad Soyad <span className="text-red-500">*</span>
+                    Ad Soyad
                   </label>
                   <input
                     type="text"
                     id="name"
                     name="name"
+                    autoComplete="name"
                     aria-required="true"
                     value={formData.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.name && errors.name
+                    className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body text-neutral-dark ${touched.name && errors.name
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 focus:border-transparent"
                       }`}
@@ -270,17 +271,18 @@ const Contact: React.FC = () => {
                     htmlFor="email"
                     className="block font-body font-medium text-neutral-dark mb-2"
                   >
-                    E-posta Adresi <span className="text-red-500">*</span>
+                    E-posta Adresi
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
+                    autoComplete="email"
                     aria-required="true"
                     value={formData.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.email && errors.email
+                    className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body text-neutral-dark ${touched.email && errors.email
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 focus:border-transparent"
                       }`}
@@ -297,17 +299,18 @@ const Contact: React.FC = () => {
                   htmlFor="phone"
                   className="block font-body font-medium text-neutral-dark mb-2"
                 >
-                  Telefon Numarası <span className="text-red-500">*</span>
+                  Telefon Numarası
                 </label>
                 <input
                   type="tel"
                   id="phone"
                   name="phone"
+                  autoComplete="tel"
                   aria-required="true"
                   value={formData.phone}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.phone && errors.phone
+                  className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body text-neutral-dark ${touched.phone && errors.phone
                     ? "border-red-500 focus:border-red-500"
                     : "border-gray-300 focus:border-transparent"
                     }`}
@@ -323,18 +326,19 @@ const Contact: React.FC = () => {
                   htmlFor="address"
                   className="block font-body font-medium text-neutral-dark mb-2"
                 >
-                  Adres <span className="text-red-500">*</span>
+                  Adres
                 </label>
                 <textarea
                   id="address"
                   name="address"
+                  autoComplete="street-address"
                   aria-required="true"
                   rows={1}
                   value={formData.address}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   style={{ minHeight: "42px", overflowY: "hidden" }}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.address && errors.address
+                  className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body text-neutral-dark ${touched.address && errors.address
                     ? "border-red-500 focus:border-red-500"
                     : "border-gray-300 focus:border-transparent"
                     }`}
@@ -350,18 +354,19 @@ const Contact: React.FC = () => {
                   htmlFor="message"
                   className="block font-body font-medium text-neutral-dark mb-2"
                 >
-                  Mesajınız <span className="text-red-500">*</span>
+                  Mesajınız
                 </label>
                 <textarea
                   id="message"
                   name="message"
+                  autoComplete="off"
                   aria-required="true"
                   rows={2}
                   value={formData.message}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   style={{ minHeight: "84px", overflowY: "hidden" }}
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body ${touched.message && errors.message
+                  className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-primary transition-all duration-200 font-body text-neutral-dark ${touched.message && errors.message
                     ? "border-red-500 focus:border-red-500"
                     : "border-gray-300 focus:border-transparent"
                     }`}
@@ -390,6 +395,9 @@ const Contact: React.FC = () => {
                             setKvkkApproved(e.target.checked);
                             if (e.target.checked) {
                               setKvkkError("");
+                              setIsKvkkOpen(true);
+                            } else {
+                              setIsKvkkOpen(false);
                             }
                           }}
                           className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
@@ -401,8 +409,7 @@ const Contact: React.FC = () => {
                           className="font-body text-sm text-gray-600"
                         >
                           Kişisel verilerimin işlenmesi hakkında bilgilendirmeyi
-                          okudum ve onaylıyorum.{" "}
-                          <span className="text-red-500">*</span>
+                          okudum ve onaylıyorum.
                         </label>
                       </div>
                     </div>

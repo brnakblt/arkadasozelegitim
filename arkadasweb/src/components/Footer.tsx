@@ -64,39 +64,10 @@ const Footer: React.FC = () => {
         </svg>
       </div>
 
-      <div className="pt-20 pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Main Footer Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {/* Newsletter Section */}
-            <div className="lg:col-span-2">
-              <p className="font-body text-white/80 mb-6 leading-relaxed max-w-md">
-                2009 yılından bu yana özel eğitim alanında hizmet veren
-                merkezimiz, özel gereksinimli çocukların eğitim ve
-                rehabilitasyon süreçlerinde ailelerin yanında olmaktadır.
-              </p>
-
-              {/* Newsletter Signup */}
-              <div className="mb-6">
-                <h3 className="font-body font-semibold text-white mb-3">
-                  Haberdar Olun
-                </h3>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    placeholder="E-posta adresiniz"
-                    className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-secondary font-body"
-                  />
-                  <button className="bg-secondary text-white px-6 py-3 rounded-xl font-body font-semibold hover:bg-secondary/90 transition-colors duration-300">
-                    Abone Ol
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+      <div className="py-4 relative z-10">
+        <div className="max-w-1xl mx-auto px-2 sm:px-2 lg:px-2">
           {/* Bottom Bar */}
-          <div className="border-t border-white/20 pt-8">
+          <div className="">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="font-body text-white/60 text-sm">
                 © 2025 Arkadaş Özel Eğitim

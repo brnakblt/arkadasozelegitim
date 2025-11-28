@@ -18,9 +18,6 @@
     "title": {
       "type": "string"
     },
-    "specialization": {
-      "type": "string"
-    },
     "objectPosition": {
       "type": "string"
     },
@@ -40,6 +37,9 @@
     },
     "order": {
       "type": "integer"
+    },
+    "link": {
+      "type": "string"
     }
   }
 }

@@ -573,11 +573,11 @@ export interface ApiTeamMemberTeamMember extends Schema.CollectionType {
     > &
       Attribute.Private;
     image: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    link: Attribute.String;
     name: Attribute.String;
     objectPosition: Attribute.String;
     order: Attribute.Integer;
     publishedAt: Attribute.DateTime;
-    specialization: Attribute.String;
     title: Attribute.String;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
