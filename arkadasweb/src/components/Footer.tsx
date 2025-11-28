@@ -93,35 +93,6 @@ const Footer: React.FC = () => {
                 </div>
               </div>
             </div>
-
-            {/* Quick Links */}
-            <div>
-              <h3 className="font-display text-lg font-bold text-white mb-4">
-                Hızlı Linkler
-              </h3>
-              <ul className="space-y-3">
-                {[
-                  { name: "Ana Sayfa", id: "home" },
-                  { name: "Hakkımızda", id: "about" },
-                  { name: "Hizmetlerimiz", id: "services" },
-                  { name: "Sürecimiz", id: "process" },
-                  { name: "Galeri", id: "gallery" },
-                  { name: "İletişim", id: "contact" },
-                  { name: "SSS", id: "faq" },
-                ].map((link) => (
-                  <li key={link.id}>
-                    <button
-                      onClick={() => scrollToSection(link.id)}
-                      className="font-body text-white/80 hover:text-secondary transition-colors duration-200"
-                    >
-                      {link.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-
           </div>
 
           {/* Bottom Bar */}

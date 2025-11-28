@@ -555,6 +555,7 @@ export interface ApiGlobalGlobal extends Schema.SingleType {
 export interface ApiTeamMemberTeamMember extends Schema.CollectionType {
   collectionName: 'team_members';
   info: {
+    description: '';
     displayName: 'Team Member';
     pluralName: 'team-members';
     singularName: 'team-member';
@@ -571,7 +572,6 @@ export interface ApiTeamMemberTeamMember extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
-    description: Attribute.Text;
     image: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     name: Attribute.String;
     objectPosition: Attribute.String;

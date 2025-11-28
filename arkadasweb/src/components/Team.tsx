@@ -152,14 +152,14 @@ const Team: React.FC = () => {
         </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredMembers.map((member) => (
             <div
               key={member.id}
-              className="group relative overflow-hidden bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+              className="group relative overflow-hidden bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300"
             >
               <div className="relative z-20">
-                <div className="w-56 h-56 mx-auto mb-6 rounded-2xl overflow-hidden relative">
+                <div className="w-48 h-48 mx-auto mb-4 rounded-2xl overflow-hidden relative">
                   <Image
                     unoptimized
                     src={
@@ -171,8 +171,8 @@ const Team: React.FC = () => {
                       member.attributes.image?.data?.attributes
                         ?.alternativeText || member.attributes.name
                     }
-                    width={224}
-                    height={224}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover rounded-2xl"
                     style={{
                       objectPosition:
@@ -181,27 +181,34 @@ const Team: React.FC = () => {
                   />
                 </div>
 
-                <div className="text-center">
-                  <h3 className="font-display text-xl font-bold text-neutral-dark mb-2">
+                <div className="text-center px-2 pb-2">
+                  <h3 className="font-display text-lg font-bold text-neutral-dark mb-1">
                     {member.attributes.name}
                   </h3>
-                  <p className="text-primary font-body font-medium text-sm mb-2">
+
+                  <p className="text-primary font-body font-medium text-sm mb-3">
                     {member.attributes.title}
                   </p>
-                  <p className="text-neutral-dark/70 font-body text-sm mb-2">
-                    {member.attributes.specialization}
-                  </p>
-                  <p className="text-neutral-dark/60 font-body text-xs">
+                </div>
+
+                {/* Separator & Bottom Section */}
+                <div className="relative overflow-hidden border-t border-gray-100 pt-4 px-2">
+                  <p className="text-neutral-dark/70 font-body text-sm leading-relaxed mb-4 line-clamp-3 relative z-10 transition-colors duration-300 group-hover:text-neutral-dark">
                     {member.attributes.description}
                   </p>
 
-                  {/* Social Links */}
-                  <div className="flex justify-center space-x-4 mt-4"></div>
+                  {member.attributes.specialization && (
+                    <div className="mt-auto pt-2 relative z-10 transform translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                      <span className="inline-block bg-white/90 text-secondary font-display font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-lg shadow-sm">
+                        {member.attributes.specialization}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Gradient Hover Effect - Constrained to bottom section */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/20 to-transparent transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0 z-0"></div>
                 </div>
               </div>
-
-              {/* Gradient Hover Effect */}
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-secondary/40 to-transparent transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0 z-10"></div>
             </div>
           ))}
         </div>
