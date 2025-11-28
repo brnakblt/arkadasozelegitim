@@ -32,6 +32,9 @@ const Contact: React.FC = () => {
   const [kvkkError, setKvkkError] = useState("");
   const [isKvkkOpen, setIsKvkkOpen] = useState(false);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const STRAPI_URL = "http://127.0.0.1:1337";
+
   const validateField = (name: string, value: string) => {
     switch (name) {
       case "name":
@@ -57,7 +60,7 @@ const Contact: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!kvkkApproved) {
@@ -87,23 +90,44 @@ const Contact: React.FC = () => {
 
     // Check if there are any errors
     if (Object.values(newErrors).every((error) => error === "")) {
-      // Form is valid, proceed with submission
-      console.log("Form submitted:", formData);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        message: "",
-      });
-      setTouched({
-        name: false,
-        email: false,
-        phone: false,
-        address: false,
-        message: false,
-      });
-      alert("Mesajınız için teşekkürler! En kısa sürede size dönüş yapacağız.");
+      try {
+        setIsSubmitting(true);
+        const response = await fetch(`${STRAPI_URL}/api/contact-messages`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ data: formData }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Bir hata oluştu");
+        }
+
+        // Form is valid and submitted successfully
+        console.log("Form submitted:", formData);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          message: "",
+        });
+        setTouched({
+          name: false,
+          email: false,
+          phone: false,
+          address: false,
+          message: false,
+        });
+        setKvkkApproved(false); // Reset KVKK approval
+        alert("Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.");
+      } catch (error) {
+        console.error("Submission error:", error);
+        alert("Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -473,9 +497,11 @@ const Contact: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full bg-primary text-white py-4 rounded-xl font-body font-semibold hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
+                disabled={isSubmitting}
+                className={`w-full bg-primary text-white py-4 rounded-xl font-body font-semibold hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
               >
-                Mesaj Gönder
+                {isSubmitting ? "Gönderiliyor..." : "Mesaj Gönder"}
               </button>
             </form>
           </div>

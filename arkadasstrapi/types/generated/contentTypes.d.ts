@@ -519,6 +519,40 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiContactMessageContactMessage extends Schema.CollectionType {
+  collectionName: 'contact_messages';
+  info: {
+    displayName: 'ContactMessage';
+    pluralName: 'contact-messages';
+    singularName: 'contact-message';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    address: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::contact-message.contact-message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    email: Attribute.Email;
+    message: Attribute.Text;
+    name: Attribute.String;
+    phone: Attribute.String;
+    publishedAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::contact-message.contact-message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiGlobalGlobal extends Schema.SingleType {
   collectionName: 'globals';
   info: {
@@ -982,6 +1016,7 @@ declare module '@strapi/types' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
+      'api::contact-message.contact-message': ApiContactMessageContactMessage;
       'api::global.global': ApiGlobalGlobal;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'plugin::content-releases.release': PluginContentReleasesRelease;
