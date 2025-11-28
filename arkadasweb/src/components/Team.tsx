@@ -29,7 +29,7 @@ const Team: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const STRAPI_URL = "http://localhost:1337"; // Strapi sunucunuzun adresi
+  const STRAPI_URL = "http://127.0.0.1:1337"; // Strapi sunucunuzun adresi
 
   const fetchTeamMembers = useCallback(async () => {
     const defaultCategories = [
@@ -126,8 +126,8 @@ const Team: React.FC = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-dark mt-4 mb-6">
-            Uzman
-            <span className="text-gradient block">Kadromuz</span>
+            <span className="text-gradient block">Uzman</span>
+            <span>Kadromuz</span>
           </h2>
           <p className="font-body text-lg text-neutral-dark/80 max-w-3xl mx-auto leading-relaxed">
             Alanında uzman ve deneyimli ekibimizle öğrencilerimize en iyi
@@ -142,8 +142,8 @@ const Team: React.FC = () => {
               key={category}
               onClick={() => setActiveCategory(category)}
               className={`px-6 py-3 rounded-full font-body font-medium transition-all duration-300 whitespace-nowrap ${activeCategory === category
-                  ? "bg-primary text-white shadow-lg"
-                  : "bg-gray-100 text-neutral-dark hover:bg-gray-200"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-gray-100 text-neutral-dark hover:bg-gray-200"
                 }`}
             >
               {category}
@@ -159,8 +159,9 @@ const Team: React.FC = () => {
               className="group relative overflow-hidden bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
             >
               <div className="relative z-20">
-                <div className="w-56 h-56 mx-auto mb-6 rounded-2xl overflow-hidden">
+                <div className="w-56 h-56 mx-auto mb-6 rounded-2xl overflow-hidden relative">
                   <Image
+                    unoptimized
                     src={
                       member.attributes.image?.data?.attributes?.url
                         ? `${STRAPI_URL}${member.attributes.image.data.attributes.url}`
@@ -170,13 +171,13 @@ const Team: React.FC = () => {
                       member.attributes.image?.data?.attributes
                         ?.alternativeText || member.attributes.name
                     }
-                    fill
+                    width={224}
+                    height={224}
                     className="object-cover rounded-2xl"
                     style={{
                       objectPosition:
                         member.attributes.objectPosition || "center",
                     }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
                 </div>
 

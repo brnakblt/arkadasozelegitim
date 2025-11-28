@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     title: 'Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi',
     description: 'İzmir Çiğli\'de uzman özel eğitim ve rehabilitasyon hizmetleri.',
   },
+  icons: {
+    icon: '/images/favicon.svg',
+  },
 }
 
 export default function RootLayout({

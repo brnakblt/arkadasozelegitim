@@ -45,9 +45,8 @@ const Hero: React.FC = () => {
             src={src}
             alt={`Slide ${index + 1}`}
             fill
-            className={`object-cover transition-opacity duration-1000 ${
-              index === currentImageIndex ? "opacity-100" : "opacity-0"
-            }`}
+            className={`object-cover transition-opacity duration-1000 ${index === currentImageIndex ? "opacity-100" : "opacity-0"
+              }`}
             priority={index === 0}
           />
         ))}
@@ -77,9 +76,8 @@ const Hero: React.FC = () => {
           <button
             key={index}
             onClick={() => setCurrentImageIndex(index)}
-            className={`w-3 h-3 rounded-full ${
-              index === currentImageIndex ? "bg-white" : "bg-white/50"
-            }`}
+            className={`w-3 h-3 rounded-full ${index === currentImageIndex ? "bg-white" : "bg-white/50"
+              }`}
           ></button>
         ))}
       </div>
