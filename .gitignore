@@ -1,6 +1,20 @@
 .env
+.env.local
+.env.*.local
 node_modules
 assets
 .directory
 arkadasstrapi/.directory
 arkadasweb/.directory
+
+# Nextcloud
+nextcloud/config/config.php
+nextcloud/data/
+nextcloud/apps-extra/
+
+# IDEs
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
