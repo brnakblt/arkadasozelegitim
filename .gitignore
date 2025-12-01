@@ -7,10 +7,6 @@ assets
 arkadasstrapi/.directory
 arkadasweb/.directory
 
-# Nextcloud
-nextcloud/config/config.php
-nextcloud/data/
-nextcloud/apps-extra/
 
 # IDEs
 .idea
