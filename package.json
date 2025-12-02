@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build:all": "concurrently \"npm run build --prefix strapi\" \"npm run build --prefix web\"",
-    "dev:all": "concurrently \"npm run develop --prefix strapi\" \"npm run dev --prefix web\"",
-    "start:all": "concurrently \"npm run start --prefix strapi\" \"npm run start --prefix web\"",
-    "stop:all": "fuser -k 3000/tcp 1337/tcp"
+    "dev:all": "concurrently \"docker compose -f nextcloud/docker-compose.yml up -d\" \"npm run develop --prefix strapi\" \"npm run dev --prefix web\" \"npm run start --prefix mobile\"",
+    "start:all": "concurrently \"docker compose -f nextcloud/docker-compose.yml up -d\" \"npm run start --prefix strapi\" \"npm run start --prefix web\"",
+    "stop:all": "concurrently \"docker compose -f nextcloud/docker-compose.yml stop\" \"fuser -k 3000/tcp 1337/tcp 8081/tcp\""
   }
 }

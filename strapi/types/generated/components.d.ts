@@ -1,5 +1,17 @@
 import type { Attribute, Schema } from '@strapi/strapi';
 
+export interface SharedFeature extends Schema.Component {
+  collectionName: 'components_shared_features';
+  info: {
+    description: '';
+    displayName: 'Feature';
+    icon: 'check';
+  };
+  attributes: {
+    text: Attribute.String & Attribute.Required;
+  };
+}
+
 export interface SharedMedia extends Schema.Component {
   collectionName: 'components_shared_media';
   info: {
@@ -73,14 +85,29 @@ export interface SharedSlider extends Schema.Component {
   };
 }
 
+export interface SharedStat extends Schema.Component {
+  collectionName: 'components_shared_stats';
+  info: {
+    description: '';
+    displayName: 'Stat';
+    icon: 'chart-pie';
+  };
+  attributes: {
+    label: Attribute.String & Attribute.Required;
+    value: Attribute.String & Attribute.Required;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
+      'shared.feature': SharedFeature;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
+      'shared.stat': SharedStat;
     }
   }
 }

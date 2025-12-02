@@ -1,11 +1,19 @@
+.directory
 .env
 .env.local
 .env.*.local
 node_modules
-assets
-.directory
-arkadasstrapi/.directory
-arkadasweb/.directory
+# Tauri
+src-tauri/target/
+src-tauri/gen/
+.tauri/
+
+# Strapi
+strapi/.tmp/
+strapi/build/
+strapi/dist/
+strapi/.cache/
+strapi/public/uploads/asweb/.directory
 
 
 # IDEs
