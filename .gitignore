@@ -24,3 +24,5 @@ strapi/public/uploads/asweb/.directory
 .DS_Store
 .gemini/
 gha-creds-*.json
+.github/commands
+.github/workflows/gemini-*.yml
