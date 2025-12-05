@@ -15,4 +15,17 @@ export default ({ env }) => ({
       },
     },
   },
+  upload: {
+    config: {
+      provider: 'local',
+      providerOptions: {
+        sizeLimit: 100000,
+      },
+      security: {
+        actions: {
+          coopPolicy: 'same-origin',
+        },
+      },
+    },
+  },
 });
