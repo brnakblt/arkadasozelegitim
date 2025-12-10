@@ -1,0 +1,10 @@
+=nextcloud, strapi ve onlyoffice sunuculari kurulacak ofis.ark.. admin.ark.. ofis.ark.. lila.ark..
+=strapi kolayligi icin arayuzun turkce oldugu bir cms bulunacak ya da strapi turkceye cevirilecek.
+=geolocation verisi nasil alinir, ve entegre edilir uygulmaya aristirilacak
+=kamera sistemli giris cikis verisi nasil entegre edilecek ayri bir uygulama seklinde mi takip edilecek yoksa veri direkt mebin cektigi fotograflardan mi yapilacak
+=lila.ark yerine daha modern bir arayuz sunan arkadasozelegitim.com'a gecis yapilacak bunlarin backend baglantilari sagalanacak arayuz arkadasin olacak ama back-end servisi lilaya tasinacak
+=rest apiler ayarlanacak
+=kullanicilar ve yetkileri seedlenecek
+=nextclouddan izole veriler icin content type olusturulacak student_profile, teacher_profile ve admin ve superadmin yetkilendirme vb. 
+=dokumantasyon hazirlanacak
+=yunohost debian ubuntu farki arastirilacak. yunohost veya casos nextcloud, strapiyi ve onlyoffici docker mi kuruyor native mi kuruyor?

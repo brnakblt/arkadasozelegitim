@@ -20,7 +20,7 @@
     "@strapi/plugin-users-permissions": "5.31.3",
     "@strapi/provider-email-nodemailer": "5.31.3",
     "@strapi/strapi": "5.31.3",
-    "better-sqlite3": "^11.10.0",
+    "better-sqlite3": "^12.5.0",
     "mysql2": "^3.15.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -39,6 +39,15 @@
   "engines": {
     "node": ">=18.0.0 <=22.x.x",
     "npm": ">=6.0.0"
+  },
+  "overrides": {
+    "glob": "10.5.0",
+    "koa": "2.16.2",
+    "esbuild": "^0.25.0",
+    "nodemailer": "^7.0.11",
+    "vite": "^5.4.21",
+    "ai": "^5.0.52",
+    "tmp": "0.2.5"
   },
   "strapi": {
     "uuid": "2df19c16-117a-40dd-be9b-3624784364c0",
