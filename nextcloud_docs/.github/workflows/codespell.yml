@@ -1,0 +1,22 @@
+name: 'Codespell'
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  codespell:
+    name: Check spelling
+    runs-on: self-hosted
+    steps:
+      - name: Check out code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Check spelling
+        uses: codespell-project/actions-codespell@8f01853be192eb0f849a5c7d721450e7a467c579 # v2.2
+        with:
+          skip: '**.svg,**.js'
