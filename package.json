@@ -1,15 +1,75 @@
 {
+  "name": "arkadas-erp",
+  "version": "1.0.0",
+  "description": "Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi - ERP Sistemi",
+  "private": true,
+  "workspaces": [
+    "strapi",
+    "web",
+    "mobile"
+  ],
   "dependencies": {
     "@sentry/react": "^10.27.0",
     "@sentry/tracing": "^7.120.4"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "kill-port": "^2.0.1",
+    "wait-on": "^7.2.0"
   },
   "scripts": {
-    "build:all": "concurrently \"docker compose -f nextcloud/docker-compose.yml pull\" \"npm run build --prefix strapi\" \"npm run build --prefix web\"",
-    "dev:all": "concurrently \"docker compose -f nextcloud/docker-compose.yml up\" \"npm run develop --prefix strapi\" \"npm run dev --prefix web\" \"npm run start --prefix mobile\"",
-    "start:all": "concurrently \"docker compose -f nextcloud/docker-compose.yml up\" \"npm run start --prefix strapi\" \"npm run start --prefix web\"",
-    "stop:all": "concurrently \"docker compose -f nextcloud/docker-compose.yml stop\" \"fuser -k 3000/tcp 1337/tcp 8081/tcp\""
-  }
+    "------- DEV -------": "",
+    "dev": "npm run dev:all",
+    "dev:all": "concurrently -n strapi,web,ai -c blue,green,magenta \"npm run dev:strapi\" \"npm run dev:web\" \"npm run dev:ai\"",
+    "dev:strapi": "npm run develop --prefix strapi",
+    "dev:web": "npm run dev --prefix web",
+    "dev:mobile": "npm run start --prefix mobile",
+    "dev:ai": "cd ai-service && .\\venv\\Scripts\\python -m uvicorn app.main:app --reload --port 8000",
+    "dev:docker": "docker compose -f infrastructure/docker-compose.yml up -d",
+    "------- BUILD -------": "",
+    "build": "npm run build:all",
+    "build:all": "concurrently \"npm run build:strapi\" \"npm run build:web\"",
+    "build:strapi": "npm run build --prefix strapi",
+    "build:web": "npm run build --prefix web",
+    "build:mobile": "cd mobile && npx expo build",
+    "------- START (Production) -------": "",
+    "start": "npm run start:all",
+    "start:all": "concurrently -n strapi,web,docker -c blue,green,yellow \"npm run start:strapi\" \"npm run start:web\" \"npm run start:docker\"",
+    "start:strapi": "npm run start --prefix strapi",
+    "start:web": "npm run start --prefix web",
+    "start:docker": "docker compose -f infrastructure/docker-compose.yml up -d",
+    "------- STOP -------": "",
+    "stop": "npm run stop:all",
+    "stop:all": "concurrently \"npm run stop:docker\" \"npm run stop:ports\"",
+    "stop:docker": "docker compose -f infrastructure/docker-compose.yml stop",
+    "stop:ports": "npx kill-port 3000 1337 8000 8080",
+    "------- INSTALL -------": "",
+    "install:all": "npm install && npm run install:strapi && npm run install:web && npm run install:mobile",
+    "install:strapi": "cd strapi && npm install",
+    "install:web": "cd web && npm install",
+    "install:mobile": "cd mobile && npm install",
+    "install:ai": "cd ai-service && python -m venv venv && .\\venv\\Scripts\\pip install -r requirements.txt",
+    "------- UTILS -------": "",
+    "clean": "npm run clean:all",
+    "clean:all": "concurrently \"npm run clean:strapi\" \"npm run clean:web\" \"npm run clean:mobile\"",
+    "clean:strapi": "cd strapi && rm -rf node_modules .cache build",
+    "clean:web": "cd web && rm -rf node_modules .next",
+    "clean:mobile": "cd mobile && rm -rf node_modules .expo",
+    "lint": "concurrently \"npm run lint --prefix web\" \"npm run lint --prefix strapi\"",
+    "typecheck": "concurrently \"npm run typecheck --prefix web\""
+  },
+  "engines": {
+    "node": ">=18.0.0 <23.0.0"
+  },
+  "keywords": [
+    "erp",
+    "education",
+    "special-education",
+    "strapi",
+    "nextjs",
+    "react-native",
+    "face-recognition"
+  ],
+  "author": "Arkadaş Özel Eğitim",
+  "license": "UNLICENSED"
 }

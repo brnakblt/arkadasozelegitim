@@ -499,6 +499,56 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAttendanceLogAttendanceLog
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'attendance_logs';
+  info: {
+    description: 'Yoklama kay\u0131tlar\u0131 (y\u00FCz tan\u0131ma dahil)';
+    displayName: 'Attendance Log';
+    pluralName: 'attendance-logs';
+    singularName: 'attendance-log';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    confidenceScore: Schema.Attribute.Decimal;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    deviceId: Schema.Attribute.String;
+    eventType: Schema.Attribute.Enumeration<['check_in', 'check_out']> &
+      Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::attendance-log.attendance-log'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String;
+    method: Schema.Attribute.Enumeration<
+      ['face_recognition', 'manual', 'qr_code', 'card']
+    > &
+      Schema.Attribute.Required;
+    notes: Schema.Attribute.Text;
+    photo: Schema.Attribute.Media<'images'>;
+    photoUrl: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    recordedAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    verifiedBy: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   collectionName: 'authors';
   info: {
@@ -593,6 +643,48 @@ export interface ApiContactMessageContactMessage
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiErpRoleErpRole extends Struct.CollectionTypeSchema {
+  collectionName: 'erp_roles';
+  info: {
+    description: 'Custom ERP roles with permissions';
+    displayName: 'ERP Role';
+    pluralName: 'erp-roles';
+    singularName: 'erp-role';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    displayName: Schema.Attribute.String & Schema.Attribute.Required;
+    isSystem: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    level: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::erp-role.erp-role'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    permissions: Schema.Attribute.JSON & Schema.Attribute.DefaultTo<{}>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -720,6 +812,92 @@ export interface ApiHeroHero extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiLocationLogLocationLog extends Struct.CollectionTypeSchema {
+  collectionName: 'location_logs';
+  info: {
+    description: 'GPS konum kay\u0131tlar\u0131';
+    displayName: 'Location Log';
+    pluralName: 'location-logs';
+    singularName: 'location-log';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    accuracyMeters: Schema.Attribute.Decimal;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    heading: Schema.Attribute.Decimal;
+    latitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::location-log.location-log'
+    > &
+      Schema.Attribute.Private;
+    longitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    recordedAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    route: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::service-route.service-route'
+    >;
+    source: Schema.Attribute.Enumeration<['gps', 'network', 'manual']> &
+      Schema.Attribute.DefaultTo<'gps'>;
+    speedKmh: Schema.Attribute.Decimal;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiNextcloudSyncNextcloudSync
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'nextcloud_syncs';
+  info: {
+    description: 'Nextcloud kullan\u0131c\u0131 e\u015Fle\u015Ftirme';
+    displayName: 'Nextcloud Sync';
+    pluralName: 'nextcloud-syncs';
+    singularName: 'nextcloud-sync';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    homeFolderPath: Schema.Attribute.String;
+    lastError: Schema.Attribute.Text;
+    lastSyncAt: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::nextcloud-sync.nextcloud-sync'
+    > &
+      Schema.Attribute.Private;
+    nextcloudDisplayName: Schema.Attribute.String;
+    nextcloudUserId: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    quotaTotal: Schema.Attribute.BigInteger;
+    quotaUsed: Schema.Attribute.BigInteger & Schema.Attribute.DefaultTo<'0'>;
+    syncStatus: Schema.Attribute.Enumeration<['active', 'suspended', 'error']> &
+      Schema.Attribute.DefaultTo<'active'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiProcessProcess extends Struct.CollectionTypeSchema {
   collectionName: 'processes';
   info: {
@@ -749,6 +927,142 @@ export interface ApiProcessProcess extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiRouteStopRouteStop extends Struct.CollectionTypeSchema {
+  collectionName: 'route_stops';
+  info: {
+    description: 'Servis duraklar\u0131';
+    displayName: 'Route Stop';
+    pluralName: 'route-stops';
+    singularName: 'route-stop';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    estimatedArrivalOffsetMinutes: Schema.Attribute.Integer;
+    latitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::route-stop.route-stop'
+    > &
+      Schema.Attribute.Private;
+    longitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    route: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::service-route.service-route'
+    >;
+    stopOrder: Schema.Attribute.Integer & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiScheduleSchedule extends Struct.CollectionTypeSchema {
+  collectionName: 'schedules';
+  info: {
+    description: 'Ders, terapi, toplant\u0131 programlar\u0131';
+    displayName: 'Schedule';
+    pluralName: 'schedules';
+    singularName: 'schedule';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    attendees: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    color: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    endTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    isAllDay: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::schedule.schedule'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    recurrenceRule: Schema.Attribute.String;
+    scheduleType: Schema.Attribute.Enumeration<
+      ['class', 'therapy', 'meeting', 'event']
+    > &
+      Schema.Attribute.Required;
+    startTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    status: Schema.Attribute.Enumeration<
+      ['scheduled', 'cancelled', 'completed']
+    > &
+      Schema.Attribute.DefaultTo<'scheduled'>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiServiceRouteServiceRoute
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'service_routes';
+  info: {
+    description: 'Servis g\u00FCzergahlar\u0131';
+    displayName: 'Service Route';
+    pluralName: 'service-routes';
+    singularName: 'service-route';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    afternoonDepartureTime: Schema.Attribute.Time;
+    assignedStudents: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::student-profile.student-profile'
+    >;
+    assistant: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    capacity: Schema.Attribute.Integer;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    driver: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    estimatedDurationMinutes: Schema.Attribute.Integer;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::service-route.service-route'
+    > &
+      Schema.Attribute.Private;
+    morningDepartureTime: Schema.Attribute.Time;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    stops: Schema.Attribute.Relation<'oneToMany', 'api::route-stop.route-stop'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    vehiclePlate: Schema.Attribute.String;
   };
 }
 
@@ -782,6 +1096,111 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiStudentProfileStudentProfile
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'student_profiles';
+  info: {
+    description: '\u00D6\u011Frenci profil bilgileri';
+    displayName: 'Student Profile';
+    pluralName: 'student-profiles';
+    singularName: 'student-profile';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    bloodType: Schema.Attribute.Enumeration<
+      [
+        'A_positive',
+        'A_negative',
+        'B_positive',
+        'B_negative',
+        'AB_positive',
+        'AB_negative',
+        'O_positive',
+        'O_negative',
+      ]
+    >;
+    classroom: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dateOfBirth: Schema.Attribute.Date;
+    disabilityLevel: Schema.Attribute.Enumeration<
+      ['mild', 'moderate', 'severe', 'profound']
+    >;
+    disabilityType: Schema.Attribute.String;
+    emergencyContactName: Schema.Attribute.String;
+    emergencyContactPhone: Schema.Attribute.String;
+    enrollmentDate: Schema.Attribute.Date;
+    faceEncodingUpdatedAt: Schema.Attribute.DateTime;
+    facePhoto: Schema.Attribute.Media<'images'>;
+    facePhotoUrl: Schema.Attribute.String;
+    gender: Schema.Attribute.Enumeration<['male', 'female', 'other']>;
+    graduationDate: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student-profile.student-profile'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.RichText;
+    parentGuardian: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    studentNumber: Schema.Attribute.String & Schema.Attribute.Unique;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiTeacherProfileTeacherProfile
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'teacher_profiles';
+  info: {
+    description: '\u00D6\u011Fretmen profil bilgileri';
+    displayName: 'Teacher Profile';
+    pluralName: 'teacher-profiles';
+    singularName: 'teacher-profile';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    bio: Schema.Attribute.RichText;
+    certifications: Schema.Attribute.JSON;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    department: Schema.Attribute.String;
+    employeeNumber: Schema.Attribute.String & Schema.Attribute.Unique;
+    hireDate: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::teacher-profile.teacher-profile'
+    > &
+      Schema.Attribute.Private;
+    officeLocation: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    specialization: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -1077,8 +1496,8 @@ export interface PluginUploadFile extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    alternativeText: Schema.Attribute.String;
-    caption: Schema.Attribute.String;
+    alternativeText: Schema.Attribute.Text;
+    caption: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1102,7 +1521,7 @@ export interface PluginUploadFile extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     mime: Schema.Attribute.String & Schema.Attribute.Required;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    previewUrl: Schema.Attribute.String;
+    previewUrl: Schema.Attribute.Text;
     provider: Schema.Attribute.String & Schema.Attribute.Required;
     provider_metadata: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
@@ -1111,7 +1530,7 @@ export interface PluginUploadFile extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    url: Schema.Attribute.String & Schema.Attribute.Required;
+    url: Schema.Attribute.Text & Schema.Attribute.Required;
     width: Schema.Attribute.Integer;
   };
 }
@@ -1334,15 +1753,24 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::about.about': ApiAboutAbout;
       'api::article.article': ApiArticleArticle;
+      'api::attendance-log.attendance-log': ApiAttendanceLogAttendanceLog;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
       'api::contact-message.contact-message': ApiContactMessageContactMessage;
+      'api::erp-role.erp-role': ApiErpRoleErpRole;
       'api::faq.faq': ApiFaqFaq;
       'api::gallery.gallery': ApiGalleryGallery;
       'api::global.global': ApiGlobalGlobal;
       'api::hero.hero': ApiHeroHero;
+      'api::location-log.location-log': ApiLocationLogLocationLog;
+      'api::nextcloud-sync.nextcloud-sync': ApiNextcloudSyncNextcloudSync;
       'api::process.process': ApiProcessProcess;
+      'api::route-stop.route-stop': ApiRouteStopRouteStop;
+      'api::schedule.schedule': ApiScheduleSchedule;
+      'api::service-route.service-route': ApiServiceRouteServiceRoute;
       'api::service.service': ApiServiceService;
+      'api::student-profile.student-profile': ApiStudentProfileStudentProfile;
+      'api::teacher-profile.teacher-profile': ApiTeacherProfileTeacherProfile;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

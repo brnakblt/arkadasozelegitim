@@ -3,19 +3,21 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-async function findFile(name) {
-  const file = await strapi.query('plugin::upload.file').findOne({
-    where: {
+const { createStrapi } = require('@strapi/strapi');
+
+async function findFile(strapi, name) {
+  const files = await strapi.documents('plugin::upload.file').findMany({
+    filters: {
       name: {
         $contains: name,
       },
     },
   });
-  return file;
+  return files[0];
 }
 
-async function setPublicPermissions() {
-  const publicRole = await strapi.query('plugin::users-permissions.role').findOne({
+async function setPublicPermissions(strapi) {
+  const publicRole = await strapi.db.query('plugin::users-permissions.role').findOne({
     where: { type: 'public' },
   });
 
@@ -32,32 +34,55 @@ async function setPublicPermissions() {
   ];
 
   for (const permission of permissions) {
-    const [action] = permission.split('.').slice(-1);
-    const uid = permission.split('.').slice(0, -1).join('.');
-    
-    await strapi.query('plugin::users-permissions.permission').create({
-      data: {
+    const existing = await strapi.db.query('plugin::users-permissions.permission').findOne({
+      where: {
         action: permission,
-        role: publicRole.id,
-      },
+        role: publicRole.id
+      }
     });
+
+    if (!existing) {
+      await strapi.db.query('plugin::users-permissions.permission').create({
+        data: {
+          action: permission,
+          role: publicRole.id,
+        },
+      });
+    }
   }
   console.log('Public permissions set.');
 }
 
-async function seedHero() {
-  const images = [];
-  for (let i = 1; i <= 6; i++) {
-    const file = await findFile(`${i}.webp`); // Assuming files are named 1.webp, etc.
-    if (file) images.push(file);
+async function seedHero(strapi) {
+  // Clear existing
+  try {
+    const existing = await strapi.documents('api::hero.hero').findMany();
+    if (existing) {
+      // v5 single types might return object or array depending on context, assuming array for safety or just delete if id exists
+      if (Array.isArray(existing)) {
+        for (const item of existing) {
+          await strapi.documents('api::hero.hero').delete({ documentId: item.documentId });
+        }
+      } else if (existing.documentId) {
+        await strapi.documents('api::hero.hero').delete({ documentId: existing.documentId });
+      }
+    }
+  } catch (e) {
+    // Ignore if not found
   }
 
-  await strapi.entityService.create('api::hero.hero', {
+  const images = [];
+  for (let i = 1; i <= 6; i++) {
+    const file = await findFile(strapi, `${i}.webp`);
+    if (file) images.push(file.id); // v5 usually expects ID for relations in create
+  }
+
+  await strapi.documents('api::hero.hero').create({
     data: {
       title: 'Her Çocuk',
       subtitle: 'Özel ve Değerli',
       description: 'Özel eğitim ve rehabilitasyon alanında uzman kadromuzla, her çocuğun potansiyelini keşfetmesi ve gelişmesi için bireysel eğitim programları sunuyoruz.',
-      images: images,
+      images: images, // Pass IDs
       stats: [
         { value: '500+', label: 'Başarılı Öğrenci' },
         { value: '15+', label: 'Yıl Deneyim' },
@@ -66,16 +91,23 @@ async function seedHero() {
       ],
       publishedAt: new Date(),
     },
+    status: 'published',
   });
   console.log('Hero seeded.');
 }
 
-async function seedServices() {
+async function seedServices(strapi) {
+  // Clear existing
+  const existing = await strapi.documents('api::service.service').findMany();
+  for (const item of existing) {
+    await strapi.documents('api::service.service').delete({ documentId: item.documentId });
+  }
+
   const services = [
     {
       title: 'Dil ve Konuşma Terapisi',
       description: 'Dil ve konuşma bozuklukları olan çocuklar için bireysel terapi programları ve aile eğitimi.',
-      icon: 'comments',
+      icon: '💬',
       features: [
         { text: 'Artikülasyon Terapisi' },
         { text: 'Dil Gelişimi' },
@@ -86,7 +118,7 @@ async function seedServices() {
     {
       title: 'Özel Eğitim Programları',
       description: 'Özel gereksinimli çocuklar için bireysel eğitim planları ve akademik destek programları.',
-      icon: 'brain',
+      icon: '🧩',
       features: [
         { text: 'Bireysel Eğitim Planı' },
         { text: 'Akademik Beceriler' },
@@ -97,7 +129,7 @@ async function seedServices() {
     {
       title: 'Rehabilitasyon Hizmetleri',
       description: 'Fiziksel ve bilişsel rehabilitasyon programları ile çocukların gelişimini destekleme.',
-      icon: 'users',
+      icon: '🤸',
       features: [
         { text: 'Fizyoterapi' },
         { text: 'Ergoterapisi' },
@@ -108,32 +140,46 @@ async function seedServices() {
   ];
 
   for (const service of services) {
-    await strapi.entityService.create('api::service.service', {
-      data: { ...service, publishedAt: new Date() },
+    await strapi.documents('api::service.service').create({
+      data: service,
+      status: 'published',
     });
   }
   console.log('Services seeded.');
 }
 
-async function seedProcesses() {
+async function seedProcesses(strapi) {
+  // Clear existing
+  const existing = await strapi.documents('api::process.process').findMany();
+  for (const item of existing) {
+    await strapi.documents('api::process.process').delete({ documentId: item.documentId });
+  }
+
   const processes = [
-    { number: '01', title: 'İlk Görüşme', description: 'Çocuğunuzla tanışır ve ailenizle detaylı bir görüşme gerçekleştiririz.', icon: 'users' },
-    { number: '02', title: 'Bireysel Eğitim Planı', description: 'Değerlendirme sonuçlarına göre çocuğunuza özel bireysel eğitim programı hazırlarız.', icon: 'clipboard-list' },
-    { number: '03', title: 'Eğitim Sürecinin Başlatılması', description: 'Uzman öğretmenlerimiz ve terapistlerimizle bireysel eğitim seanslarına başlarız.', icon: 'bullseye' },
-    { number: '04', title: 'Aile Eğitimi ve Danışmanlık', description: 'Ailelere evde uygulayabilecekleri stratejiler ve destek programları sağlarız.', icon: 'user-friends' },
-    { number: '05', title: 'Düzenli Takip ve Değerlendirme', description: 'Çocuğunuzun gelişimini düzenli olarak takip eder, programı güncelleriz.', icon: 'chart-line' },
-    { number: '06', title: 'Sürekli Destek', description: 'Eğitim süreci boyunca ve sonrasında sürekli destek ve danışmanlık hizmeti veriyoruz.', icon: 'handshake' },
+    { number: '01', title: 'İlk Görüşme', description: 'Çocuğunuzla tanışır ve ailenizle detaylı bir görüşme gerçekleştiririz.', icon: '👥' },
+    { number: '02', title: 'Bireysel Eğitim Planı', description: 'Değerlendirme sonuçlarına göre çocuğunuza özel bireysel eğitim programı hazırlarız.', icon: '📋' },
+    { number: '03', title: 'Eğitim Sürecinin Başlatılması', description: 'Uzman öğretmenlerimiz ve terapistlerimizle bireysel eğitim seanslarına başlarız.', icon: '🚀' },
+    { number: '04', title: 'Aile Eğitimi ve Danışmanlık', description: 'Ailelere evde uygulayabilecekleri stratejiler ve destek programları sağlarız.', icon: '👨‍👩‍👧‍👦' },
+    { number: '05', title: 'Düzenli Takip ve Değerlendirme', description: 'Çocuğunuzun gelişimini düzenli olarak takip eder, programı güncelleriz.', icon: '📈' },
+    { number: '06', title: 'Sürekli Destek', description: 'Eğitim süreci boyunca ve sonrasında sürekli destek ve danışmanlık hizmeti veriyoruz.', icon: '🤝' },
   ];
 
   for (const process of processes) {
-    await strapi.entityService.create('api::process.process', {
-      data: { ...process, publishedAt: new Date() },
+    await strapi.documents('api::process.process').create({
+      data: process,
+      status: 'published',
     });
   }
   console.log('Processes seeded.');
 }
 
-async function seedFAQs() {
+async function seedFAQs(strapi) {
+  // Clear existing
+  const existing = await strapi.documents('api::faq.faq').findMany();
+  for (const item of existing) {
+    await strapi.documents('api::faq.faq').delete({ documentId: item.documentId });
+  }
+
   const faqs = [
     { question: 'Hangi yaş gruplarına hizmet veriyorsunuz?', answer: '0-18 yaş arası tüm çocuklara hizmet veriyoruz. Erken müdahale programlarından okul çağı destek eğitimlerine kadar geniş bir yaş yelpazesinde uzmanlaşmış hizmetler sunuyoruz.' },
     { question: 'Özel eğitim süreci nasıl başlıyor?', answer: 'İlk olarak ailemizle görüşme yapıyor, çocuğunuzun ihtiyaçlarını değerlendiriyoruz. Ardından kapsamlı bir değerlendirme süreci başlatıyor ve bireysel eğitim planı hazırlıyoruz. Tüm süreç ailenin aktif katılımıyla gerçekleşir.' },
@@ -144,14 +190,21 @@ async function seedFAQs() {
   ];
 
   for (const faq of faqs) {
-    await strapi.entityService.create('api::faq.faq', {
-      data: { ...faq, publishedAt: new Date() },
+    await strapi.documents('api::faq.faq').create({
+      data: faq,
+      status: 'published',
     });
   }
   console.log('FAQs seeded.');
 }
 
-async function seedGallery() {
+async function seedGallery(strapi) {
+  // Clear existing
+  const existing = await strapi.documents('api::gallery.gallery').findMany();
+  for (const item of existing) {
+    await strapi.documents('api::gallery.gallery').delete({ documentId: item.documentId });
+  }
+
   const galleryItems = [
     { src: '1.webp', title: 'Bireysel Çalışmalar', category: 'Eğitim', alt: 'Arkadaş Özel Eğitim ve Rehabilitasyon Merkezi - Uzman eğitmenler ile bireysel çalışmalar' },
     { src: '2.webp', title: 'Özel Eğitim Sınıfları', category: 'Eğitim', alt: 'Arkadaş Özel Eğitim Merkezi - Modern özel eğitim sınıfları, çocuklar öğreniyor, destekleyici eğitim ortamı' },
@@ -162,16 +215,16 @@ async function seedGallery() {
   ];
 
   for (const item of galleryItems) {
-    const file = await findFile(item.src);
+    const file = await findFile(strapi, item.src);
     if (file) {
-      await strapi.entityService.create('api::gallery.gallery', {
+      await strapi.documents('api::gallery.gallery').create({
         data: {
           title: item.title,
           category: item.category,
           alt: item.alt,
-          image: file,
-          publishedAt: new Date(),
+          image: file.id, // v5 ID
         },
+        status: 'published',
       });
     }
   }
@@ -179,8 +232,7 @@ async function seedGallery() {
 }
 
 async function main() {
-  const Strapi = require('@strapi/strapi');
-  const app = await Strapi({
+  const app = await createStrapi({
     appDir: path.resolve(__dirname, '..'),
     distDir: path.resolve(__dirname, '../dist'),
   }).load();
@@ -188,12 +240,12 @@ async function main() {
   app.log.level = 'error';
 
   try {
-    await setPublicPermissions();
-    await seedHero();
-    await seedServices();
-    await seedProcesses();
-    await seedFAQs();
-    await seedGallery();
+    await setPublicPermissions(app);
+    await seedHero(app);
+    await seedServices(app);
+    await seedProcesses(app);
+    await seedFAQs(app);
+    await seedGallery(app);
     console.log('Seeding completed successfully.');
   } catch (error) {
     console.error('Seeding failed:', error);

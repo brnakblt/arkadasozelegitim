@@ -1,0 +1,46 @@
+{
+    "kind": "collectionType",
+    "collectionName": "erp_roles",
+    "info": {
+        "singularName": "erp-role",
+        "pluralName": "erp-roles",
+        "displayName": "ERP Role",
+        "description": "Custom ERP roles with permissions"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "displayName": {
+            "type": "string",
+            "required": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "level": {
+            "type": "integer",
+            "default": 0,
+            "required": true
+        },
+        "isSystem": {
+            "type": "boolean",
+            "default": false
+        },
+        "permissions": {
+            "type": "json",
+            "default": {}
+        },
+        "users": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "plugin::users-permissions.user"
+        }
+    }
+}

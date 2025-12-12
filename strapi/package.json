@@ -19,12 +19,13 @@
     "@strapi/plugin-cloud": "5.31.3",
     "@strapi/plugin-users-permissions": "5.31.3",
     "@strapi/provider-email-nodemailer": "5.31.3",
-    "@strapi/strapi": "5.31.3",
+    "@strapi/strapi": "^5.32.0",
     "better-sqlite3": "^12.5.0",
     "mysql2": "^3.15.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
+    "sharp": "^0.34.5",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {

@@ -15,7 +15,6 @@ strapi/dist/
 strapi/.cache/
 strapi/public/uploads/asweb/.directory
 
-
 # IDEs
 .idea
 .vscode
@@ -26,3 +25,7 @@ strapi/public/uploads/asweb/.directory
 gha-creds-*.json
 .github/commands
 .github/workflows/gemini-*.yml
+nextcloud_docs
+.env.reference
+yapilacaklar.txt
+*.txt
