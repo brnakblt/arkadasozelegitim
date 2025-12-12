@@ -27,5 +27,6 @@ gha-creds-*.json
 .github/workflows/gemini-*.yml
 nextcloud_docs
 .env.reference
-yapilacaklar.txt
-*.txt
+
+
+todo.txt
