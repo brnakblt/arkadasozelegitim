@@ -56,7 +56,14 @@
     "clean:web": "cd web && rm -rf node_modules .next",
     "clean:mobile": "cd mobile && rm -rf node_modules .expo",
     "lint": "concurrently \"npm run lint --prefix web\" \"npm run lint --prefix strapi\"",
-    "typecheck": "concurrently \"npm run typecheck --prefix web\""
+    "typecheck": "concurrently \"npm run typecheck --prefix web\"",
+    "------- TEST -------": "",
+    "test": "npm run test:all",
+    "test:all": "concurrently \"npm run test:web\" \"npm run test:mobile\"",
+    "test:web": "npm run test:unit --prefix web",
+    "test:mobile": "npm test --prefix mobile",
+    "test:e2e": "npm run test:e2e --prefix web",
+    "test:coverage": "npm run test:coverage --prefix web"
   },
   "engines": {
     "node": ">=18.0.0 <23.0.0"
