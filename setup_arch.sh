@@ -202,6 +202,17 @@ if [ -d "mobile" ]; then
     print_success "Mobile dependencies installed"
 fi
 
+# MEBBIS Service (Arkadaş MEBBIS Automation)
+if [ -d "mebbis-service" ]; then
+    cd mebbis-service
+    npm install
+    
+    # Install Playwright browsers for automation
+    npx playwright install chromium
+    cd ..
+    print_success "MEBBIS Service dependencies installed"
+fi
+
 #########################################################
 # 8. Environment Files
 #########################################################
@@ -223,6 +234,12 @@ fi
 if [ -f "ai-service/.env.example" ] && [ ! -f "ai-service/.env" ]; then
     cp ai-service/.env.example ai-service/.env
     print_success "Created ai-service/.env from template"
+fi
+
+# MEBBIS Service
+if [ -f "mebbis-service/.env.example" ] && [ ! -f "mebbis-service/.env" ]; then
+    cp mebbis-service/.env.example mebbis-service/.env
+    print_success "Created mebbis-service/.env from template"
 fi
 
 #########################################################
@@ -248,22 +265,25 @@ echo ""
 echo "1. Open a new terminal (to load NVM)"
 echo ""
 echo "2. Start the development servers:"
-echo "   # Terminal 1 - Strapi (Backend)"
-echo "   cd strapi && npm run develop"
+echo "   # Option A - All at once:"
+echo "   npm run dev"
 echo ""
-echo "   # Terminal 2 - Web (Frontend)"
-echo "   cd web && npm run dev"
-echo ""
-echo "   # Terminal 3 - AI Service"
-echo "   cd ai-service && source venv/bin/activate && uvicorn app.main:app --reload"
+echo "   # Option B - Individually:"
+echo "   npm run dev:strapi   # Backend      → localhost:1337"
+echo "   npm run dev:web      # Frontend     → localhost:3000"
+echo "   npm run dev:ai       # AI Service   → localhost:8000"
+echo "   npm run dev:mebbis   # MEBBIS       → localhost:4000"
 echo ""
 echo "3. Access the applications:"
-echo "   - Frontend:  http://localhost:3000"
-echo "   - Strapi:    http://localhost:1337/admin"
-echo "   - AI API:    http://localhost:8000/docs"
+echo "   - Frontend:       http://localhost:3000"
+echo "   - Strapi Admin:   http://localhost:1337/admin"
+echo "   - AI API:         http://localhost:8000/docs"
+echo "   - MEBBIS API:     http://localhost:4000/api"
 echo ""
 echo "4. Configure environment variables:"
 echo "   - strapi/.env (Nextcloud, database)"
 echo "   - web/.env.local (Google Maps API key)"
+echo "   - mebbis-service/.env (MEBBIS credentials)"
 echo ""
 print_success "Happy coding! 🚀"
+

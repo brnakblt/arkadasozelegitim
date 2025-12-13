@@ -1,0 +1,55 @@
+# Prettier ignore file
+# Ignores files that shouldn't be formatted
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+**/.next/
+**/out/
+**/dist/
+**/build/
+
+# Package manager files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Auto-generated files
+*.min.js
+*.min.css
+*.bundle.js
+*.bundle.css
+
+# Config files that have specific formatting
+*.config.js
+*.config.cjs
+*.config.mjs
+
+# Tauri
+src-tauri/
+
+# Documentation builds
+docs/site/
+
+# Strapi auto-generated
+strapi/.cache/
+strapi/types/
+
+# Logs and temp files
+*.log
+*.tmp
+.DS_Store
+
+# Test snapshots
+**/__snapshots__/
+
+# Mobile
+mobile/.expo/
+mobile/android/
+mobile/ios/

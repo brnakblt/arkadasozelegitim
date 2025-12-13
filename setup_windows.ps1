@@ -52,7 +52,8 @@ if (-not $hasNvm) {
             exit 0
         }
     }
-} else {
+}
+else {
     Write-Success "NVM for Windows found"
 }
 
@@ -61,7 +62,8 @@ $hasNode = Get-Command node -ErrorAction SilentlyContinue
 if ($hasNode) {
     $nodeVersion = node --version
     Write-Success "Node.js $nodeVersion installed"
-} else {
+}
+else {
     Write-Warning "Node.js not found. Install with: nvm install 22 && nvm use 22"
 }
 
@@ -77,7 +79,8 @@ try {
         $hasPython311 = $true
         Write-Success "Python 3.11 found"
     }
-} catch {
+}
+catch {
     # Python 3.11 not found
 }
 
@@ -87,7 +90,8 @@ if (-not $hasPython311) {
         $pyVersion = python --version
         Write-Warning "Python found ($pyVersion) but Python 3.11 is recommended for AI service"
         Write-Host "Install from: https://www.python.org/downloads/release/python-3119/"
-    } else {
+    }
+    else {
         Write-Warning "Python not found. Install Python 3.11 for AI service."
     }
 }
@@ -131,6 +135,19 @@ if (Test-Path "mobile") {
     Write-Success "Mobile dependencies installed"
 }
 
+# MEBBIS Service (Arkadaş MEBBIS Automation)
+if (Test-Path "mebbis-service") {
+    Write-Host "Installing MEBBIS Service dependencies..."
+    Push-Location mebbis-service
+    npm install
+    
+    # Install Playwright browsers for automation
+    Write-Host "Installing Playwright browsers..."
+    npx playwright install chromium
+    Pop-Location
+    Write-Success "MEBBIS Service dependencies installed"
+}
+
 #########################################################
 # 5. Python AI Service Setup
 #########################################################
@@ -144,7 +161,8 @@ if (Test-Path "ai-service") {
         Write-Host "Creating Python virtual environment..."
         if ($hasPython311) {
             py -3.11 -m venv venv
-        } else {
+        }
+        else {
             python -m venv venv
         }
         Write-Success "Virtual environment created"
@@ -169,7 +187,8 @@ if (Test-Path "ai-service") {
     deactivate
     Pop-Location
     Write-Success "Python AI service environment ready"
-} else {
+}
+else {
     Write-Warning "ai-service directory not found"
 }
 
@@ -196,6 +215,12 @@ if ((Test-Path "ai-service\.env.example") -and -not (Test-Path "ai-service\.env"
     Write-Success "Created ai-service\.env from template"
 }
 
+# MEBBIS Service
+if ((Test-Path "mebbis-service\.env.example") -and -not (Test-Path "mebbis-service\.env")) {
+    Copy-Item "mebbis-service\.env.example" "mebbis-service\.env"
+    Write-Success "Created mebbis-service\.env from template"
+}
+
 #########################################################
 # 7. Docker Desktop Check
 #########################################################
@@ -206,10 +231,12 @@ if ($hasDocker) {
     try {
         docker info 2>$null | Out-Null
         Write-Success "Docker Desktop is running"
-    } catch {
+    }
+    catch {
         Write-Warning "Docker Desktop is installed but not running. Start it for infrastructure services."
     }
-} else {
+}
+else {
     Write-Warning "Docker Desktop not found. Install from: https://www.docker.com/products/docker-desktop/"
 }
 
@@ -225,23 +252,25 @@ Write-Host "📋 Next Steps:" -ForegroundColor White
 Write-Host ""
 Write-Host "1. Start the development servers:" -ForegroundColor White
 Write-Host ""
-Write-Host "   # Terminal 1 - Strapi (Backend)" -ForegroundColor Gray
-Write-Host "   cd strapi; npm run develop" -ForegroundColor Yellow
+Write-Host "   # Option A - All at once:" -ForegroundColor Gray
+Write-Host "   npm run dev" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "   # Terminal 2 - Web (Frontend)" -ForegroundColor Gray
-Write-Host "   cd web; npm run dev" -ForegroundColor Yellow
-Write-Host ""
-Write-Host "   # Terminal 3 - AI Service" -ForegroundColor Gray
-Write-Host "   cd ai-service; .\venv\Scripts\Activate.ps1; uvicorn app.main:app --reload" -ForegroundColor Yellow
+Write-Host "   # Option B - Individually:" -ForegroundColor Gray
+Write-Host "   npm run dev:strapi   # Backend      → localhost:1337" -ForegroundColor Yellow
+Write-Host "   npm run dev:web      # Frontend     → localhost:3000" -ForegroundColor Yellow
+Write-Host "   npm run dev:ai       # AI Service   → localhost:8000" -ForegroundColor Yellow
+Write-Host "   npm run dev:mebbis   # MEBBIS       → localhost:4000" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "2. Access the applications:" -ForegroundColor White
-Write-Host "   - Frontend:  http://localhost:3000" -ForegroundColor Cyan
-Write-Host "   - Strapi:    http://localhost:1337/admin" -ForegroundColor Cyan
-Write-Host "   - AI API:    http://localhost:8000/docs" -ForegroundColor Cyan
+Write-Host "   - Frontend:       http://localhost:3000" -ForegroundColor Cyan
+Write-Host "   - Strapi Admin:   http://localhost:1337/admin" -ForegroundColor Cyan
+Write-Host "   - AI API:         http://localhost:8000/docs" -ForegroundColor Cyan
+Write-Host "   - MEBBIS API:     http://localhost:4000/api" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "3. Configure environment variables:" -ForegroundColor White
 Write-Host "   - strapi\.env (Nextcloud, database)" -ForegroundColor Gray
 Write-Host "   - web\.env.local (Google Maps API key)" -ForegroundColor Gray
+Write-Host "   - mebbis-service\.env (MEBBIS credentials)" -ForegroundColor Gray
 Write-Host ""
 
 # Create helper batch files
@@ -264,11 +293,15 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd web; npm run d
 # Start AI Service in new window
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd ai-service; .\venv\Scripts\Activate.ps1; uvicorn app.main:app --reload --port 8000"
 
+# Start MEBBIS Service in new window
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd mebbis-service; npm run dev"
+
 Write-Host ""
 Write-Host "All servers starting in separate windows!" -ForegroundColor Green
-Write-Host "- Strapi:   http://localhost:1337/admin" -ForegroundColor Cyan
-Write-Host "- Web:      http://localhost:3000" -ForegroundColor Cyan
-Write-Host "- AI API:   http://localhost:8000/docs" -ForegroundColor Cyan
+Write-Host "- Strapi:      http://localhost:1337/admin" -ForegroundColor Cyan
+Write-Host "- Web:         http://localhost:3000" -ForegroundColor Cyan
+Write-Host "- AI API:      http://localhost:8000/docs" -ForegroundColor Cyan
+Write-Host "- MEBBIS API:  http://localhost:4000/api" -ForegroundColor Cyan
 '@
 
 Set-Content -Path "start-dev.ps1" -Value $startDevScript

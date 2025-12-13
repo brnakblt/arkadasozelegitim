@@ -1,30 +1,142 @@
-.directory
+# Arkadaş Özel Eğitim ERP - Git Ignore
+
+# ============================================================
+# Environment Files (contain secrets)
+# ============================================================
 .env
 .env.local
 .env.*.local
-node_modules
-# Tauri
-src-tauri/target/
-src-tauri/gen/
-.tauri/
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============================================================
+# Dependencies
+# ============================================================
+node_modules/
+**/node_modules/
+
+# ============================================================
+# Build Outputs
+# ============================================================
+# Next.js
+.next/
+out/
+web/.next/
+web/out/
 
 # Strapi
 strapi/.tmp/
 strapi/build/
 strapi/dist/
 strapi/.cache/
-strapi/public/uploads/asweb/.directory
 
-# IDEs
-.idea
-.vscode
+# MEBBIS Service
+mebbis-service/dist/
+mebbis-service/logs/
+
+# AI Service
+ai-service/__pycache__/
+ai-service/*.pyc
+ai-service/venv/
+ai-service/.venv/
+
+# Tauri
+src-tauri/target/
+src-tauri/gen/
+.tauri/
+web/src-tauri/target/
+
+# Mobile
+mobile/.expo/
+mobile/android/
+mobile/ios/
+
+# ============================================================
+# Logs
+# ============================================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# ============================================================
+# IDE & Editor
+# ============================================================
+.idea/
+.vscode/
 *.swp
 *.swo
+*.sublime-*
 .DS_Store
-.gemini/
+Thumbs.db
+.directory
+
+# ============================================================
+# Testing
+# ============================================================
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# ============================================================
+# Temporary Files
+# ============================================================
+*.tmp
+*.temp
+.cache/
+
+# ============================================================
+# Project Specific
+# ============================================================
+# Uploaded files (tracked separately)
+strapi/public/uploads/
+
+# Nextcloud docs (synced separately)
+nextcloud_docs/
+
+# GHA credentials
 gha-creds-*.json
-.github/commands
-.github/workflows/gemini-*.yml
-nextcloud_docs
-.env.reference
+
+# ============================================================
+# Keep These (negated patterns)
+# ============================================================
+!.env.example
+!.env.reference
+!strapi/.env.example
+!web/.env.example
+!mebbis-service/.env.example
+!ai-service/.env.example
+
+# ============================================================
+# AI/Dev Tool Configs (auto-generated)
+# ============================================================
+.github/commands/
+.gemini/
+*.gemini.toml
+
+# Tauri generated files
+web/src-tauri/gen/
+web/src-tauri/target/
+web/src-tauri/WixTools/
+
+# Lock files (optional - keep package-lock.json)
+# Cargo.lock  # Keep for reproducible builds
+
+# OS generated
+Desktop.ini
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Editor backups
+*~
+\#*\#
+.fuse_hidden*
+
+# Custom Ignore
 todo.txt

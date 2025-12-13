@@ -210,6 +210,11 @@ arkadasozelegitim/
 ├── 📂 ai-service/          # AI Face Recognition (Python)
 │   └── app/api/            # FastAPI endpoints
 │
+├── 📂 mebbis-service/      # Arkadaş MEBBIS Automation (Node.js)
+│   ├── src/services/       # MEBBIS automation services
+│   ├── src/api/            # REST API endpoints
+│   └── src/types/          # TypeScript type definitions
+│
 ├── 📂 docs/                # MkDocs documentation
 │   └── docs/api/           # OpenAPI specification
 │
@@ -236,6 +241,7 @@ npm run dev
 npm run dev:strapi   # Backend API     → localhost:1337
 npm run dev:web      # Frontend        → localhost:3000
 npm run dev:ai       # AI Service      → localhost:8000
+npm run dev:mebbis   # MEBBIS Service  → localhost:4000
 npm run dev:mobile   # Mobile          → Expo Go
 npm run dev:docker   # Infrastructure  → Nextcloud, etc.
 ```
@@ -248,6 +254,7 @@ npm run dev:docker   # Infrastructure  → Nextcloud, etc.
 | Strapi Admin | <http://localhost:1337/admin> | CMS yönetim paneli |
 | API Docs | <http://localhost:1337/api> | REST API |
 | AI Service | <http://localhost:8000/docs> | FastAPI Swagger |
+| Arkadaş MEBBIS | <http://localhost:4000/api> | MEBBIS Otomasyon Servisi |
 | Nextcloud | <http://localhost:8080> | Dosya yönetimi |
 
 ---
@@ -272,6 +279,21 @@ npm run dev:docker   # Infrastructure  → Nextcloud, etc.
 | `/api/match` | POST | Yüz eşleştirme |
 | `/api/train` | POST | Model eğitimi |
 | `/api/health` | GET | Sağlık kontrolü |
+
+### Arkadaş MEBBIS Service API
+
+MEBBIS (Milli Eğitim Bakanlığı Bilişim Sistemleri) ile entegrasyon için otomasyon servisi.
+
+| Endpoint | Method | Açıklama |
+|----------|--------|----------|
+| `/api/health` | GET | Servis sağlık kontrolü |
+| `/api/sync/students` | POST | Öğrenci verilerini MEBBIS'ten senkronize et |
+| `/api/sync/educators` | POST | Eğitimci verilerini senkronize et |
+| `/api/education/submit` | POST | Eğitim bilgisi kayıtlarını MEBBIS'e aktar |
+| `/api/invoices/create` | POST | Fatura oluştur |
+| `/api/invoices/approve` | POST | Bekleyen faturaları onayla |
+| `/api/bep/submit` | POST | BEP formlarını (EK-4, EK-5, EK-6) aktar |
+| `/api/status/:jobId` | GET | Arka plan işlerinin durumunu sorgula |
 
 📖 Detaylı API dokümantasyonu için: [docs/docs/api/openapi.yaml](./docs/docs/api/openapi.yaml)
 
