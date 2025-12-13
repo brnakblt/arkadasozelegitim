@@ -5,6 +5,7 @@ Uses face_recognition library (requires Python 3.11 + dlib)
 """
 
 import os
+import re
 import json
 import base64
 import pickle
@@ -33,6 +34,10 @@ class FaceRecognitionService:
     Uses face_recognition library (based on dlib)
     """
     
+    # Regex pattern for valid user IDs (alphanumeric, underscore, hyphen only)
+    USER_ID_PATTERN = re.compile(r'^[a-zA-Z0-9_-]+$')
+    MAX_USER_ID_LENGTH = 128
+    
     def __init__(self):
         self.encodings_path = settings.FACE_ENCODINGS_PATH
         self.tolerance = settings.FACE_RECOGNITION_TOLERANCE
@@ -48,6 +53,47 @@ class FaceRecognitionService:
         
         # Load existing encodings on startup
         self._load_encodings()
+    
+    def _validate_user_id(self, user_id: str) -> str:
+        """
+        Validate and sanitize user_id to prevent path traversal attacks.
+        Raises ValueError if user_id is invalid.
+        """
+        if not user_id or not isinstance(user_id, str):
+            raise ValueError("user_id is required and must be a string")
+        
+        # Strip whitespace and get basename to prevent directory traversal
+        sanitized = os.path.basename(user_id.strip())
+        
+        # Check length
+        if len(sanitized) > self.MAX_USER_ID_LENGTH:
+            raise ValueError(f"user_id exceeds maximum length of {self.MAX_USER_ID_LENGTH}")
+        
+        # Validate against pattern
+        if not self.USER_ID_PATTERN.match(sanitized):
+            raise ValueError("user_id must contain only alphanumeric characters, underscores, and hyphens")
+        
+        # Additional check: ensure no path separators after sanitization
+        if os.path.sep in sanitized or '/' in sanitized or '\\' in sanitized:
+            raise ValueError("Invalid user_id format")
+        
+        return sanitized
+    
+    def _get_user_filepath(self, user_id: str) -> str:
+        """
+        Safely construct filepath for user data.
+        """
+        sanitized_id = self._validate_user_id(user_id)
+        filepath = os.path.join(self.encodings_path, f"{sanitized_id}.pkl")
+        
+        # Verify the path is within the expected directory
+        real_encodings_path = os.path.realpath(self.encodings_path)
+        real_filepath = os.path.realpath(filepath)
+        
+        if not real_filepath.startswith(real_encodings_path):
+            raise ValueError("Invalid file path - path traversal detected")
+        
+        return filepath
     
     def _load_encodings(self):
         """Load all face encodings from disk into memory"""
@@ -66,8 +112,8 @@ class FaceRecognitionService:
         print(f"📦 Loaded face encodings for {len(self._encodings_cache)} users")
     
     def _save_user_encodings(self, user_id: str):
-        """Save user encodings to disk"""
-        filepath = os.path.join(self.encodings_path, f"{user_id}.pkl")
+        """Save user encodings to disk (user_id already validated)"""
+        filepath = self._get_user_filepath(user_id)
         data = {
             'encodings': self._encodings_cache.get(user_id, []),
             'metadata': self._user_metadata.get(user_id, {}),
@@ -270,11 +316,14 @@ class FaceRecognitionService:
         }
     
     async def delete_user_encodings(self, user_id: str) -> bool:
-        """Delete all encodings for a user"""
-        self._encodings_cache.pop(user_id, None)
-        self._user_metadata.pop(user_id, None)
+        """Delete all encodings for a user (with path traversal protection)"""
+        # Validate user_id first
+        sanitized_id = self._validate_user_id(user_id)
         
-        filepath = os.path.join(self.encodings_path, f"{user_id}.pkl")
+        self._encodings_cache.pop(sanitized_id, None)
+        self._user_metadata.pop(sanitized_id, None)
+        
+        filepath = self._get_user_filepath(sanitized_id)
         if os.path.exists(filepath):
             os.remove(filepath)
         

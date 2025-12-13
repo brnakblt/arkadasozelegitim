@@ -146,14 +146,33 @@ export function QRAttendanceScreen({ onScan, onClose }: QRAttendanceProps) {
 // QR Code Parser
 // ============================================================
 
+// SECURITY FIX #12: Validate studentId format
+const STUDENT_ID_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/;
+const VALID_ACTIONS = ['check-in', 'check-out'] as const;
+
+function validateStudentId(id: unknown): string | null {
+    if (typeof id !== 'string') return null;
+    if (!STUDENT_ID_PATTERN.test(id)) return null;
+    return id;
+}
+
+function validateAction(action: unknown): 'check-in' | 'check-out' | null {
+    if (typeof action !== 'string') return null;
+    if (!VALID_ACTIONS.includes(action as 'check-in' | 'check-out')) return null;
+    return action as 'check-in' | 'check-out';
+}
+
 function parseQRCode(data: string): QRData | null {
     try {
         // Try JSON format first
         const parsed = JSON.parse(data);
-        if (parsed.studentId && parsed.action) {
+        const studentId = validateStudentId(parsed.studentId);
+        const action = validateAction(parsed.action);
+
+        if (studentId && action) {
             return {
-                studentId: parsed.studentId,
-                action: parsed.action,
+                studentId,
+                action,
                 timestamp: parsed.timestamp || new Date().toISOString(),
             };
         }
@@ -162,8 +181,8 @@ function parseQRCode(data: string): QRData | null {
         // Try URL format: arkadas://attendance?id=123&action=check-in
         try {
             const url = new URL(data);
-            const studentId = url.searchParams.get('id');
-            const action = url.searchParams.get('action') as 'check-in' | 'check-out';
+            const studentId = validateStudentId(url.searchParams.get('id'));
+            const action = validateAction(url.searchParams.get('action'));
 
             if (studentId && action) {
                 return {
@@ -174,7 +193,7 @@ function parseQRCode(data: string): QRData | null {
             }
         } catch {
             // Try simple format: STUDENT_123_CHECKIN
-            const match = data.match(/^STUDENT_(\w+)_(CHECKIN|CHECKOUT)$/);
+            const match = data.match(/^STUDENT_([a-zA-Z0-9_-]{1,64})_(CHECKIN|CHECKOUT)$/);
             if (match) {
                 return {
                     studentId: match[1],

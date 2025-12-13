@@ -1,5 +1,6 @@
 #########################################################
 # Arkadaş Özel Eğitim ERP - Windows PowerShell Setup Script
+# Updated: 2025-12-13
 # Run with: .\setup_windows.ps1
 # May need: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 #########################################################
@@ -8,13 +9,13 @@ $ErrorActionPreference = "Stop"
 
 # Colors
 function Write-Step { param($Message) Write-Host "==> " -NoNewline -ForegroundColor Blue; Write-Host $Message -ForegroundColor Green }
-function Write-Warning { param($Message) Write-Host "⚠️  $Message" -ForegroundColor Yellow }
-function Write-Error { param($Message) Write-Host "❌ $Message" -ForegroundColor Red }
+function Write-Warn { param($Message) Write-Host "⚠️  $Message" -ForegroundColor Yellow }
+function Write-Err { param($Message) Write-Host "❌ $Message" -ForegroundColor Red }
 function Write-Success { param($Message) Write-Host "✅ $Message" -ForegroundColor Green }
 
 Write-Host ""
 Write-Host "╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║     Arkadaş Özel Eğitim ERP - Windows Setup               ║" -ForegroundColor Cyan
+Write-Host "║     Arkadaş Özel Eğitim ERP - Windows Setup  v2.0          ║" -ForegroundColor Cyan
 Write-Host "║     Setting up development environment                     ║" -ForegroundColor Cyan
 Write-Host "╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
@@ -24,10 +25,7 @@ Write-Host ""
 #########################################################
 Write-Step "Checking prerequisites..."
 
-# Check if running as Administrator for optional features
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-
-# Check for winget
 $hasWinget = Get-Command winget -ErrorAction SilentlyContinue
 
 #########################################################
@@ -39,9 +37,8 @@ $nvmPath = "$env:APPDATA\nvm"
 $hasNvm = Test-Path $nvmPath
 
 if (-not $hasNvm) {
-    Write-Warning "NVM for Windows not found."
+    Write-Warn "NVM for Windows not found."
     Write-Host "Please install NVM for Windows from: https://github.com/coreybutler/nvm-windows/releases"
-    Write-Host "After installation, run this script again."
     Write-Host ""
     
     if ($hasWinget) {
@@ -57,20 +54,26 @@ else {
     Write-Success "NVM for Windows found"
 }
 
-# Check for Node.js
+# Check for Node.js v22
 $hasNode = Get-Command node -ErrorAction SilentlyContinue
 if ($hasNode) {
     $nodeVersion = node --version
-    Write-Success "Node.js $nodeVersion installed"
+    if ($nodeVersion -match "v22") {
+        Write-Success "Node.js $nodeVersion installed"
+    }
+    else {
+        Write-Warn "Node.js $nodeVersion found, but v22 is recommended"
+        Write-Host "Install with: nvm install 22 && nvm use 22"
+    }
 }
 else {
-    Write-Warning "Node.js not found. Install with: nvm install 22 && nvm use 22"
+    Write-Warn "Node.js not found. Install with: nvm install 22 && nvm use 22"
 }
 
 #########################################################
-# 3. Check Python Installation
+# 3. Check Python 3.11 Installation
 #########################################################
-Write-Step "Checking Python installation..."
+Write-Step "Checking Python 3.11 installation..."
 
 $hasPython311 = $false
 try {
@@ -88,16 +91,38 @@ if (-not $hasPython311) {
     $hasPython = Get-Command python -ErrorAction SilentlyContinue
     if ($hasPython) {
         $pyVersion = python --version
-        Write-Warning "Python found ($pyVersion) but Python 3.11 is recommended for AI service"
+        Write-Warn "Python found ($pyVersion) but Python 3.11 is recommended for AI service"
         Write-Host "Install from: https://www.python.org/downloads/release/python-3119/"
     }
     else {
-        Write-Warning "Python not found. Install Python 3.11 for AI service."
+        Write-Warn "Python not found. Install Python 3.11 for AI service."
     }
 }
 
 #########################################################
-# 4. Install NPM Dependencies
+# 4. Check Visual Studio Build Tools (for dlib)
+#########################################################
+Write-Step "Checking Visual Studio Build Tools..."
+
+$vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+$hasBuildTools = $false
+
+if (Test-Path $vswhere) {
+    $vsInstalls = & $vswhere -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64
+    if ($vsInstalls) {
+        $hasBuildTools = $true
+        Write-Success "Visual Studio Build Tools found"
+    }
+}
+
+if (-not $hasBuildTools) {
+    Write-Warn "Visual Studio Build Tools not found (required for dlib/face-recognition)"
+    Write-Host "Download: https://aka.ms/vs/17/release/vs_BuildTools.exe"
+    Write-Host "Select: 'Desktop development with C++'"
+}
+
+#########################################################
+# 5. Install NPM Dependencies
 #########################################################
 Write-Step "Installing NPM dependencies..."
 
@@ -135,13 +160,12 @@ if (Test-Path "mobile") {
     Write-Success "Mobile dependencies installed"
 }
 
-# MEBBIS Service (Arkadaş MEBBIS Automation)
+# MEBBIS Service
 if (Test-Path "mebbis-service") {
     Write-Host "Installing MEBBIS Service dependencies..."
     Push-Location mebbis-service
     npm install
     
-    # Install Playwright browsers for automation
     Write-Host "Installing Playwright browsers..."
     npx playwright install chromium
     Pop-Location
@@ -149,7 +173,7 @@ if (Test-Path "mebbis-service") {
 }
 
 #########################################################
-# 5. Python AI Service Setup
+# 6. Python AI Service Setup
 #########################################################
 Write-Step "Setting up Python AI service..."
 
@@ -174,26 +198,31 @@ if (Test-Path "ai-service") {
     
     pip install --upgrade pip
     
-    # Check if dlib wheel exists on desktop
-    $dlibWheel = "$env:USERPROFILE\Desktop\dlib-19.24.1-cp311-cp311-win_amd64.whl"
-    if (Test-Path $dlibWheel) {
-        Write-Host "Installing dlib from local wheel..."
-        pip install $dlibWheel
-    }
+    # Install requirements
+    Write-Host "Installing AI service dependencies..."
+    pip install -r requirements.txt
     
-    # Install other requirements
-    pip install -r requirements.txt 2>$null
+    # Check if dlib is installed
+    $dlibInstalled = pip list 2>$null | Select-String "dlib"
+    if (-not $dlibInstalled) {
+        Write-Warn "dlib not installed - face recognition features will not work"
+        Write-Host "To install dlib, you need Visual Studio Build Tools"
+        Write-Host "See: docs/face-recognition-setup.md"
+    }
+    else {
+        Write-Success "dlib is installed - face recognition ready!"
+    }
     
     deactivate
     Pop-Location
     Write-Success "Python AI service environment ready"
 }
 else {
-    Write-Warning "ai-service directory not found"
+    Write-Warn "ai-service directory not found"
 }
 
 #########################################################
-# 6. Environment Files
+# 7. Environment Files
 #########################################################
 Write-Step "Setting up environment files..."
 
@@ -222,7 +251,7 @@ if ((Test-Path "mebbis-service\.env.example") -and -not (Test-Path "mebbis-servi
 }
 
 #########################################################
-# 7. Docker Desktop Check
+# 8. Docker Desktop Check
 #########################################################
 Write-Step "Checking Docker Desktop..."
 
@@ -233,11 +262,30 @@ if ($hasDocker) {
         Write-Success "Docker Desktop is running"
     }
     catch {
-        Write-Warning "Docker Desktop is installed but not running. Start it for infrastructure services."
+        Write-Warn "Docker Desktop is installed but not running. Start it for Redis/infrastructure."
     }
 }
 else {
-    Write-Warning "Docker Desktop not found. Install from: https://www.docker.com/products/docker-desktop/"
+    Write-Warn "Docker Desktop not found (required for Redis/MEBBIS service)"
+    Write-Host "Install from: https://www.docker.com/products/docker-desktop/"
+}
+
+#########################################################
+# 9. Install Context7 MCP (optional)
+#########################################################
+Write-Step "Checking Context7 MCP..."
+
+$hasContext7 = npm list -g @upstash/context7-mcp 2>$null
+if ($hasContext7 -match "context7-mcp") {
+    Write-Success "Context7 MCP installed"
+}
+else {
+    Write-Warn "Context7 MCP not installed (optional AI coding assistant)"
+    $installContext7 = Read-Host "Would you like to install Context7 MCP? (y/n)"
+    if ($installContext7 -eq 'y') {
+        npm install -g @upstash/context7-mcp
+        Write-Success "Context7 MCP installed. Configure in your IDE's MCP settings."
+    }
 }
 
 #########################################################
@@ -250,58 +298,75 @@ Write-Host "╚═════════════════════�
 Write-Host ""
 Write-Host "📋 Next Steps:" -ForegroundColor White
 Write-Host ""
-Write-Host "1. Start the development servers:" -ForegroundColor White
+Write-Host "1. Configure environment variables:" -ForegroundColor White
+Write-Host "   - strapi\.env (Database: SQLite or PostgreSQL)" -ForegroundColor Gray
+Write-Host "   - web\.env.local (Google Maps API key)" -ForegroundColor Gray
+Write-Host "   - mebbis-service\.env (Redis URL, MEBBIS credentials)" -ForegroundColor Gray
+Write-Host ""
+Write-Host "2. Start Docker Desktop (for Redis):" -ForegroundColor White
+Write-Host "   docker compose -f infrastructure/docker-compose.yml up -d" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "3. Start the development servers:" -ForegroundColor White
 Write-Host ""
 Write-Host "   # Option A - All at once:" -ForegroundColor Gray
-Write-Host "   npm run dev" -ForegroundColor Yellow
+Write-Host "   npm run dev:all" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "   # Option B - Individually:" -ForegroundColor Gray
 Write-Host "   npm run dev:strapi   # Backend      → localhost:1337" -ForegroundColor Yellow
 Write-Host "   npm run dev:web      # Frontend     → localhost:3000" -ForegroundColor Yellow
 Write-Host "   npm run dev:ai       # AI Service   → localhost:8000" -ForegroundColor Yellow
 Write-Host "   npm run dev:mebbis   # MEBBIS       → localhost:4000" -ForegroundColor Yellow
+Write-Host "   npm run dev:mobile   # Mobile App   → localhost:8082" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "2. Access the applications:" -ForegroundColor White
+Write-Host "4. Access the applications:" -ForegroundColor White
 Write-Host "   - Frontend:       http://localhost:3000" -ForegroundColor Cyan
 Write-Host "   - Strapi Admin:   http://localhost:1337/admin" -ForegroundColor Cyan
-Write-Host "   - AI API:         http://localhost:8000/docs" -ForegroundColor Cyan
+Write-Host "   - AI API Docs:    http://localhost:8000/docs" -ForegroundColor Cyan
 Write-Host "   - MEBBIS API:     http://localhost:4000/api" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "3. Configure environment variables:" -ForegroundColor White
-Write-Host "   - strapi\.env (Nextcloud, database)" -ForegroundColor Gray
-Write-Host "   - web\.env.local (Google Maps API key)" -ForegroundColor Gray
-Write-Host "   - mebbis-service\.env (MEBBIS credentials)" -ForegroundColor Gray
+Write-Host "   - Mobile:         Expo Go app" -ForegroundColor Cyan
 Write-Host ""
 
-# Create helper batch files
-Write-Step "Creating helper scripts..."
+if (-not $hasBuildTools) {
+    Write-Host "⚠️  Face Recognition Setup:" -ForegroundColor Yellow
+    Write-Host "   To enable face recognition features:" -ForegroundColor White
+    Write-Host "   1. Install Visual Studio Build Tools" -ForegroundColor Gray
+    Write-Host "   2. cd ai-service" -ForegroundColor Gray
+    Write-Host "   3. .\venv\Scripts\Activate.ps1" -ForegroundColor Gray
+    Write-Host "   4. pip install dlib face-recognition" -ForegroundColor Gray
+    Write-Host ""
+}
 
-# start-dev.ps1
+# Create helper batch file
+Write-Step "Creating helper script..."
+
 $startDevScript = @'
-# Start all development servers
+# Start all development servers in separate windows
 Write-Host "Starting development servers..." -ForegroundColor Green
 
-# Start Strapi in new window
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd strapi; npm run develop"
+# Check if Docker is running
+$dockerRunning = docker info 2>$null
+if (-not $dockerRunning) {
+    Write-Host "Starting Docker Desktop..." -ForegroundColor Yellow
+    Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+    Write-Host "Waiting for Docker to start (15 seconds)..." -ForegroundColor Yellow
+    Start-Sleep -Seconds 15
+}
 
-# Wait a bit for Strapi to initialize
-Start-Sleep -Seconds 3
+# Start infrastructure
+Write-Host "Starting infrastructure..." -ForegroundColor Green
+docker compose -f infrastructure/docker-compose.yml up -d
 
-# Start Web in new window
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd web; npm run dev"
-
-# Start AI Service in new window
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd ai-service; .\venv\Scripts\Activate.ps1; uvicorn app.main:app --reload --port 8000"
-
-# Start MEBBIS Service in new window
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd mebbis-service; npm run dev"
+# Start all services
+Write-Host "Starting all services..." -ForegroundColor Green
+npm run dev:all
 
 Write-Host ""
-Write-Host "All servers starting in separate windows!" -ForegroundColor Green
+Write-Host "All services started!" -ForegroundColor Green
 Write-Host "- Strapi:      http://localhost:1337/admin" -ForegroundColor Cyan
 Write-Host "- Web:         http://localhost:3000" -ForegroundColor Cyan
 Write-Host "- AI API:      http://localhost:8000/docs" -ForegroundColor Cyan
 Write-Host "- MEBBIS API:  http://localhost:4000/api" -ForegroundColor Cyan
+Write-Host "- Mobile:      http://localhost:8082" -ForegroundColor Cyan
 '@
 
 Set-Content -Path "start-dev.ps1" -Value $startDevScript

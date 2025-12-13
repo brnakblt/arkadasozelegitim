@@ -65,6 +65,16 @@ services:
     networks:
       - internal_network
 
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal_network
+
 volumes:
   db_data:
   nextcloud_data:
@@ -73,6 +83,8 @@ volumes:
   onlyoffice_lib:
   onlyoffice_db:
   n8n_data:
+  redis_data:
+
 
 networks:
   internal_network:

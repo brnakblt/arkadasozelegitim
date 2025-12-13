@@ -210,7 +210,7 @@ router.get('/education/list', asyncHandler(async (req: Request, res: Response) =
     }
 
     // This would typically fetch from Strapi, not directly from MEBBIS
-    const response: ApiResponse = {
+    const response: ApiResponse<any> = {
         success: true,
         message: 'Liste alındı',
         data: {
@@ -253,7 +253,7 @@ router.get('/invoices/candidates', asyncHandler(async (req: Request, res: Respon
         await mebbis.login();
         const candidates = await invoiceService.getInvoiceCandidates(donem);
 
-        const response: ApiResponse = {
+        const response: ApiResponse<any> = {
             success: true,
             data: { candidates, count: candidates.length },
         };
@@ -384,7 +384,7 @@ router.get('/bep/students', asyncHandler(async (req: Request, res: Response) => 
                 students = await bepService.getPerformanceRecordStudents(donem);
         }
 
-        const response: ApiResponse = {
+        const response: ApiResponse<any> = {
             success: true,
             data: { students, count: students.length },
         };
